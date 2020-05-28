@@ -5,7 +5,9 @@
             "name": "Bauch",
             "description": "lorem ipsum",
             "sets": 0,
-            "sequence": [
+            "advancedSequence": [],
+            "professionalSequence": [],
+            "beginnerSequence": [
                 {
                     "index": 0,
                     "repetitions": 0,

@@ -32,44 +32,44 @@ class _ChipSearchFieldState extends State<ChipSearchField> {
             child: Container(
               padding: EdgeInsets.all(8),
               decoration: BoxDecoration(
-                border: Border.all(
-                  width: 1,
-                  color: Theme.of(context).primaryColor,
-                ),
                 borderRadius: BorderRadius.circular(10),
                 color: Theme.of(context).primaryColor,
               ),
-              child: Wrap(
-                spacing: 5,
-                runSpacing: 5,
-                children: selectedFields
-                    .map(
-                      (activity) => InputChip(
-                        key: ObjectKey(activity),
-                        label: Text(activity.name),
-                        backgroundColor: Colors.transparent,
-                        deleteIconColor: Theme.of(context).accentColor,
-                        onDeleted: () => remove(activity),
-                        materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+              child: Row(
+                children: <Widget>[
+                  Expanded(
+                    child: Wrap(
+                      spacing: 5,
+                      runSpacing: 5,
+                      children: selectedFields
+                          .map(
+                            (activity) => InputChip(
+                              key: ObjectKey(activity),
+                              label: Text(activity.name),
+                              backgroundColor: Colors.transparent,
+                              deleteIconColor: Theme.of(context).accentColor,
+                              onDeleted: () => remove(activity),
+                              materialTapTargetSize:
+                                  MaterialTapTargetSize.shrinkWrap,
+                            ),
+                          )
+                          .toList(),
+                    ),
+                  ),
+                  IconButton(
+                    alignment: Alignment.centerRight,
+                    icon: Icon(Icons.search),
+                    onPressed: () => showSearch(
+                      context: context,
+                      delegate: ActivitySearch(
+                        toggle: toggle,
+                        selected: selectedFields,
+                        mode: ActivitySearchSelectMode.Multiple,
                       ),
-                    )
-                    .toList(),
+                    ),
+                  ),
+                ],
               ),
-            ),
-          ),
-        ),
-        RaisedButton(
-          child: Icon(
-            Icons.search,
-            color: Theme.of(context).primaryColor,
-          ),
-          color: Theme.of(context).accentColor,
-          onPressed: () => showSearch(
-            context: context,
-            delegate: ActivitySearch(
-              toggle: toggle,
-              selected: selectedFields,
-              mode: ActivitySearchSelectMode.Multiple,
             ),
           ),
         ),

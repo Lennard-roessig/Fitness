@@ -10,6 +10,9 @@ import 'workout_part_tile_pause.dart';
 import 'workout_part_tile_activity.dart';
 
 class WorkoutPartTile extends StatelessWidget {
+  static const double height = 50;
+  static const double width = 30;
+
   final WorkoutPart workoutpart;
   final int time;
   final Widget menu;
@@ -25,38 +28,52 @@ class WorkoutPartTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Selector<WorkoutProvider, GroupPosition Function(WorkoutPart)>(
-      selector: (_, provider) => provider.groupPositionOfWorkout,
-      builder: (_, fnc, child) => Container(
+    return Consumer<WorkoutProvider>(
+      builder: (_, provider, child) => Container(
         child: Column(
+          mainAxisSize: MainAxisSize.min,
           children: <Widget>[
             Row(
               children: <Widget>[
-                child,
-                ...timeline(context, groupPosition: fnc(workoutpart)),
+                Expanded(
+                  child: GestureDetector(
+                    onTap: () => onTap(workoutpart),
+                    child: Dismissible(
+                      key: UniqueKey(),
+                      onDismissed: (direction) =>
+                          provider.deleteWorkoutPart(workoutpart),
+                      child: Container(
+                        padding: EdgeInsets.all(10),
+                        decoration: BoxDecoration(
+                          color: Theme.of(context).primaryColor,
+                          borderRadius: BorderRadius.circular(15),
+                        ),
+                        // background: Container(color: Colors.red),
+                        child: showPart,
+                      ),
+                    ),
+                  ),
+                ),
+                ...timelineWorkoutPart(
+                  context,
+                  groupPosition: provider.groupPositionOfWorkout(workoutpart),
+                ),
               ],
             ),
             if (menu != null)
               Row(
                 children: <Widget>[
-                  Expanded(child: menu),
-                  ...timeline(context,
-                      menu: true, groupPosition: fnc(workoutpart)),
+                  Expanded(
+                    child: menu,
+                  ),
+                  ...timelineMenu(
+                      context,
+                      workoutpart.groupId.isNotEmpty &&
+                          provider.groupPositionOfWorkout(workoutpart) !=
+                              GroupPosition.Tail),
                 ],
               ),
           ],
-        ),
-      ),
-      child: Expanded(
-        child: GestureDetector(
-          onTap: () => onTap(workoutpart),
-          child: Container(
-            padding: EdgeInsets.all(10),
-            decoration: BoxDecoration(
-                color: Theme.of(context).primaryColor,
-                borderRadius: BorderRadius.circular(15)),
-            child: showPart,
-          ),
         ),
       ),
     );
@@ -70,10 +87,10 @@ class WorkoutPartTile extends StatelessWidget {
     return WorkoutPartTileActivity(workoutPart: workoutpart);
   }
 
-  List<Widget> timeline(BuildContext context,
-      {bool menu = false, groupPosition = GroupPosition.None}) {
-    const double height = 65;
-    const double width = 30;
+  List<Widget> timelineWorkoutPart(
+    BuildContext context, {
+    groupPosition = GroupPosition.None,
+  }) {
     return [
       Container(
         margin: EdgeInsets.only(left: 10),
@@ -82,9 +99,7 @@ class WorkoutPartTile extends StatelessWidget {
         child: Stack(
           alignment: Alignment.center,
           children: <Widget>[
-            if ((workoutpart.groupId.isNotEmpty ||
-                    workoutpart.referenceGroupId.isNotEmpty) &&
-                (!menu || groupPosition != GroupPosition.Tail))
+            if (workoutpart.groupId.isNotEmpty)
               Container(
                 height: height,
                 width: width,
@@ -102,9 +117,7 @@ class WorkoutPartTile extends StatelessWidget {
                   color: Theme.of(context).accentColor,
                 ),
               ),
-            if ((workoutpart.groupId.isNotEmpty ||
-                    workoutpart.referenceGroupId.isNotEmpty) &&
-                (!menu || groupPosition != GroupPosition.Tail))
+            if (workoutpart.groupId.isNotEmpty)
               Container(
                 height: groupPosition == GroupPosition.Head ||
                         groupPosition == GroupPosition.Tail
@@ -132,15 +145,14 @@ class WorkoutPartTile extends StatelessWidget {
                   color: Theme.of(context).scaffoldBackgroundColor,
                 ),
               ),
-            if (!menu)
-              Container(
-                width: 15,
-                height: 15,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(50),
-                  color: Theme.of(context).accentColor,
-                ),
+            Container(
+              width: 15,
+              height: 15,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(50),
+                color: Theme.of(context).accentColor,
               ),
+            ),
             Container(
               height: height,
               width: 1,
@@ -155,9 +167,45 @@ class WorkoutPartTile extends StatelessWidget {
       SizedBox(
         width: 30,
         child: Text(
-          menu ? "" : formatSecondsIntoMin(time),
+          formatSecondsIntoMin(time),
           style: TextStyle(fontSize: 11),
         ),
+      )
+    ];
+  }
+
+  List<Widget> timelineMenu(BuildContext context, bool isInGroup) {
+    return [
+      Container(
+        margin: EdgeInsets.only(left: 10),
+        width: width,
+        alignment: Alignment.center,
+        child: Stack(
+          alignment: Alignment.center,
+          children: <Widget>[
+            if (isInGroup)
+              Container(
+                height: height,
+                width: width,
+                decoration: BoxDecoration(
+                  border: Border.symmetric(
+                    horizontal: BorderSide(
+                      color: Theme.of(context).accentColor,
+                      width: 0.5,
+                    ),
+                  ),
+                ),
+              ),
+            Container(
+              height: height,
+              width: 1,
+              color: Theme.of(context).accentColor,
+            ),
+          ],
+        ),
+      ),
+      SizedBox(
+        width: 35,
       )
     ];
   }

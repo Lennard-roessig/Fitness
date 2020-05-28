@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../models.dart';
+import 'workout_clock_screen.dart';
 
 class WorkoutListView extends StatelessWidget {
   @override
@@ -18,13 +19,17 @@ class WorkoutListView extends StatelessWidget {
             padding: const EdgeInsets.only(bottom: 20),
             child: GestureDetector(
               onTap: () {
-                provider.select(provider.workouts[index]);
+                provider.selectWorkout(provider.workouts[index]);
                 Navigator.of(context).pushNamed(WorkoutCreateScreen.route);
               },
               child: WorkoutTile(
                 name: provider.workouts[index].name,
                 lastDate: '12 März 2020',
                 duration: '10:00',
+                onPlay: () {
+                  provider.selectWorkout(provider.workouts[index]);
+                  Navigator.of(context).pushNamed(WorkoutClockScreen.route);
+                },
               ),
             ),
           ),

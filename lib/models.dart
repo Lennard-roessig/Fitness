@@ -1,3 +1,4 @@
+import 'dart:collection';
 import 'dart:math';
 
 import 'model/alarm_value.dart';
@@ -111,19 +112,21 @@ class Activity {
   }
 }
 
+enum WorkoutLevel { Beginner, Advanced, Professional }
+
 class Workout {
   final String id;
   final String name;
   final String description;
   final int sets;
-  final List<WorkoutPart> sequence;
+  final Map<WorkoutLevel, List<WorkoutPart>> _sequences;
 
   Workout(
     this.id,
     this.name,
     this.description,
     this.sets,
-    this.sequence,
+    this._sequences,
   );
 
   Workout.empty(
@@ -131,8 +134,13 @@ class Workout {
     this.name = "",
     this.description = "",
     this.sets = 0,
-    this.sequence = const [],
-  });
+    Map<WorkoutLevel, List<WorkoutPart>> sequence,
+  }) : _sequences = sequence ?? HashMap();
+  // HashMap.from({
+  //   WorkoutLevel.Beginner: (const [] as List<WorkoutPart>),
+  //   // WorkoutLevel.Advanced: const [] as List<WorkoutPart>,
+  //   // WorkoutLevel.Professional: const [] as List<WorkoutPart>,
+  // });
 
   @override
   bool operator ==(Object other) =>
@@ -143,7 +151,7 @@ class Workout {
           name == other.name &&
           description == other.description &&
           description == other.description &&
-          sequence == other.sequence &&
+          _sequences == other._sequences &&
           sets == other.sets;
 
   WorkoutEntity toEntity() {
@@ -152,17 +160,34 @@ class Workout {
       this.name,
       this.description,
       this.sets,
-      this.sequence.map((e) => e.toEntity()).toList(),
+      this._sequences[WorkoutLevel.Beginner].map((e) => e.toEntity()).toList(),
+      this._sequences[WorkoutLevel.Advanced].map((e) => e.toEntity()).toList(),
+      this
+          ._sequences[WorkoutLevel.Professional]
+          .map((e) => e.toEntity())
+          .toList(),
     );
   }
 
   static Workout fromEntity(WorkoutEntity entity) {
+    final map = {
+      WorkoutLevel.Beginner: entity.beginnerSequence
+          .map((e) => WorkoutPart.fromEntity(e))
+          .toList(),
+      WorkoutLevel.Advanced: entity.advancedSequence
+          .map((e) => WorkoutPart.fromEntity(e))
+          .toList(),
+      WorkoutLevel.Professional: entity.professionalSequence
+          .map((e) => WorkoutPart.fromEntity(e))
+          .toList(),
+    };
+
     return Workout(
       entity.id,
       entity.name,
       entity.description,
       entity.sets,
-      entity.sequence.map((e) => WorkoutPart.fromEntity(e)).toList(),
+      map,
     );
   }
 
@@ -171,16 +196,23 @@ class Workout {
     String name,
     String description,
     int sets,
-    List<WorkoutPart> sequence,
+    Map<WorkoutLevel, List<WorkoutPart>> sequence,
   }) {
     return Workout(
       id ?? this.id,
       name ?? this.name,
       description ?? this.description,
       sets ?? this.sets,
-      sequence ?? this.sequence,
+      sequence ?? this._sequences,
     );
   }
+
+  UnmodifiableListView<WorkoutPart> sequence(WorkoutLevel level) =>
+      UnmodifiableListView(
+          _sequences.containsKey(level) ? _sequences[level] : const []);
+
+  UnmodifiableMapView<WorkoutLevel, List<WorkoutPart>> get sequenceMap =>
+      UnmodifiableMapView(_sequences);
 }
 
 class WorkoutPart {
@@ -188,9 +220,9 @@ class WorkoutPart {
   final int repetitions;
   final int intervall;
   final String groupId;
-  final List<Alarm> alarms;
-  final List<Mutation> mutations;
-  final List<ExerciseTarget> target;
+  final List<Alarm> _alarms;
+  final List<Mutation> _mutations;
+  final List<ExerciseTarget> _target;
   final ResistanceType resistanceType;
   final double resistanceWeight;
   final bool relativeResistanceWeight;
@@ -205,14 +237,14 @@ class WorkoutPart {
     this.repetitions,
     this.intervall,
     this.groupId,
-    this.mutations,
-    this.alarms,
+    this._mutations,
+    this._alarms,
     this.referenceGroupId,
     this.isGroup,
     this.rounds,
     this.isPause,
     this.activityId,
-    this.target,
+    this._target,
     this.resistanceType,
     this.resistanceWeight,
     this.relativeResistanceWeight,
@@ -223,18 +255,20 @@ class WorkoutPart {
     this.repetitions = 0,
     this.intervall = 0,
     this.groupId = "",
-    this.mutations = const [],
-    this.alarms = const [],
+    List<Mutation> mutations = const [],
+    final List<Alarm> alarms = const [],
     this.referenceGroupId = "",
     this.isGroup = false,
     this.rounds = 0,
     this.isPause = false,
     this.activityId = "",
-    this.target,
+    final List<ExerciseTarget> target,
     this.resistanceType,
     this.resistanceWeight = 0,
     this.relativeResistanceWeight = false,
-  });
+  })  : this._mutations = mutations,
+        this._alarms = alarms,
+        this._target = target;
 
   WorkoutPartValue toEntity() {
     return WorkoutPartValue(
@@ -242,14 +276,14 @@ class WorkoutPart {
       this.repetitions,
       this.intervall,
       this.groupId,
-      this.mutations.map((e) => e.toEntity()).toList(),
-      this.alarms.map((e) => e.toEntity()).toList(),
+      this._mutations.map((e) => e.toEntity()).toList(),
+      this._alarms.map((e) => e.toEntity()).toList(),
       this.referenceGroupId,
       this.isGroup,
       this.rounds,
       this.isPause,
       this.activityId,
-      this.target,
+      this._target,
       this.resistanceType,
       this.resistanceWeight,
       this.relativeResistanceWeight,
@@ -281,8 +315,8 @@ class WorkoutPart {
     int repetitions,
     int intervall,
     String groupId,
-    List<Alarm> mutations,
-    List<Mutation> alarms,
+    List<Mutation> mutations,
+    List<Alarm> alarms,
     List<ExerciseTarget> target,
     ResistanceType resistanceType,
     double resistanceWeight,
@@ -298,19 +332,25 @@ class WorkoutPart {
       repetitions ?? this.repetitions,
       intervall ?? this.intervall,
       groupId ?? this.groupId,
-      mutations ?? this.mutations,
-      alarms ?? this.alarms,
+      mutations ?? this._mutations,
+      alarms ?? this._alarms,
       referenceGroupId ?? this.referenceGroupId,
       isGroup ?? this.isGroup,
       rounds ?? this.rounds,
       isPause ?? this.isPause,
       activityId ?? this.activityId,
-      target ?? this.target,
+      target ?? this._target,
       resistanceType ?? this.resistanceType,
       resistanceWeight ?? this.resistanceWeight,
       relativeResistanceWeight ?? this.relativeResistanceWeight,
     );
   }
+
+  UnmodifiableListView<Alarm> get alarms => UnmodifiableListView(this._alarms);
+  UnmodifiableListView<Mutation> get mutations =>
+      UnmodifiableListView(this._mutations);
+  UnmodifiableListView<ExerciseTarget> get target =>
+      UnmodifiableListView(this._target);
 }
 
 class Alarm {
@@ -327,6 +367,22 @@ class Alarm {
     this.timestamp,
     this.relativeTimestamp,
   );
+
+  Alarm copy({
+    String label,
+    bool activ,
+    Sound sound,
+    int timestamp,
+    double relativeTimestamp,
+  }) {
+    return Alarm(
+      label ?? this.label,
+      activ ?? this.activ,
+      sound ?? this.sound,
+      timestamp ?? this.timestamp,
+      relativeTimestamp ?? this.relativeTimestamp,
+    );
+  }
 
   AlarmValue toEntity() {
     return AlarmValue(this.label, this.activ, this.sound.toEntity(),

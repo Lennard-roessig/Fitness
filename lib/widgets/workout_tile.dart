@@ -1,15 +1,18 @@
+import 'package:fitness_workouts/screens/workout_clock_screen.dart';
 import 'package:flutter/material.dart';
 
 class WorkoutTile extends StatelessWidget {
   final String name;
   final String lastDate;
   final String duration;
+  final Function onPlay;
 
   const WorkoutTile({
     Key key,
     this.name,
     this.lastDate,
     this.duration,
+    this.onPlay,
   }) : super(key: key);
 
   @override
@@ -106,7 +109,7 @@ class WorkoutTile extends StatelessWidget {
                 icon: Icon(Icons.play_arrow),
                 color: Colors.white,
                 iconSize: 64,
-                onPressed: () {},
+                onPressed: this.onPlay,
               ),
             ),
           ),

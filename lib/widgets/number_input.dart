@@ -45,48 +45,62 @@ class _NumberInputState extends State<NumberInput> {
 
   @override
   Widget build(BuildContext context) {
-    final size = MediaQuery.of(context).size;
-    return Column(
-      children: <Widget>[
-        InkWell(
-          onTap: () => step(1),
-          child: Container(
-            width: double.infinity,
-            color: Theme.of(context).accentColor,
-            child: Icon(Icons.add),
-          ),
-        ),
-        Flexible(
-          flex: 2,
-          child: Container(
-            padding: EdgeInsets.all(5),
-            color: Theme.of(context).primaryColor,
-            child: TextField(
-              keyboardType: TextInputType.number,
-              controller: _controller,
-              expands: false,
-              decoration: InputDecoration(
-                suffix: Text(widget.suffixLabel ?? ""),
-                prefix: Text(
-                  widget.suffixLabel ?? "",
-                  style: TextStyle(color: Colors.transparent),
-                ),
-                border: InputBorder.none,
+    return Container(
+      width: 100,
+      child: Column(
+        children: <Widget>[
+          TextField(
+            keyboardType: TextInputType.number,
+            controller: _controller,
+            expands: false,
+            decoration: InputDecoration(
+              suffix: Text(widget.suffixLabel ?? ""),
+              prefix: Text(
+                widget.suffixLabel ?? "",
+                style: TextStyle(color: Colors.transparent),
               ),
-              textAlign: TextAlign.center,
-              onTap: clearField,
+              border: InputBorder.none,
             ),
+            textAlign: TextAlign.center,
+            onTap: clearField,
           ),
-        ),
-        InkWell(
-          onTap: () => step(-1),
-          child: Container(
-            width: size.width,
-            color: Theme.of(context).accentColor,
-            child: Icon(Icons.remove),
-          ),
-        ),
-      ],
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: <Widget>[
+              Container(
+                width: 40,
+                height: 40,
+                decoration: BoxDecoration(
+                  color: Theme.of(context).accentColor,
+                  borderRadius: BorderRadius.circular(20),
+                ),
+                child: Center(
+                  child: IconButton(
+                    color: Theme.of(context).primaryColor,
+                    icon: Icon(Icons.add),
+                    onPressed: () => step(1),
+                  ),
+                ),
+              ),
+              Container(
+                width: 40,
+                height: 40,
+                decoration: BoxDecoration(
+                  color: Theme.of(context).accentColor,
+                  borderRadius: BorderRadius.circular(20),
+                ),
+                child: Center(
+                  child: IconButton(
+                    color: Theme.of(context).primaryColor,
+                    icon: Icon(Icons.remove),
+                    onPressed: () => step(-1),
+                  ),
+                ),
+              ),
+            ],
+          )
+        ],
+      ),
     );
   }
 
@@ -110,3 +124,58 @@ class _NumberInputState extends State<NumberInput> {
     return _controller.text.isNotEmpty ? double.parse(_controller.text) : 0;
   }
 }
+
+// Column(
+//       children: <Widget>[
+//         InkWell(
+//           onTap: () => step(1),
+//           child: Container(
+//             width: double.infinity,
+//             decoration: BoxDecoration(
+//               borderRadius: BorderRadius.only(
+//                 topLeft: Radius.circular(10),
+//                 topRight: Radius.circular(10),
+//               ),
+//               color: Theme.of(context).accentColor,
+//             ),
+//             child: Icon(Icons.add),
+//           ),
+//         ),
+//         Flexible(
+//           flex: 2,
+//           child: Container(
+//             padding: EdgeInsets.all(5),
+//             color: Theme.of(context).primaryColor,
+//             child: TextField(
+//               keyboardType: TextInputType.number,
+//               controller: _controller,
+//               expands: false,
+//               decoration: InputDecoration(
+//                 suffix: Text(widget.suffixLabel ?? ""),
+//                 prefix: Text(
+//                   widget.suffixLabel ?? "",
+//                   style: TextStyle(color: Colors.transparent),
+//                 ),
+//                 border: InputBorder.none,
+//               ),
+//               textAlign: TextAlign.center,
+//               onTap: clearField,
+//             ),
+//           ),
+//         ),
+//         InkWell(
+//           onTap: () => step(-1),
+//           child: Container(
+//             width: size.width,
+//             decoration: BoxDecoration(
+//               borderRadius: BorderRadius.only(
+//                 bottomLeft: Radius.circular(10),
+//                 bottomRight: Radius.circular(10),
+//               ),
+//               color: Theme.of(context).accentColor,
+//             ),
+//             child: Icon(Icons.remove),
+//           ),
+//         ),
+//       ],
+//     );

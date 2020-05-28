@@ -4,7 +4,10 @@ class WorkoutEntity {
   final String id;
   final String name;
   final String description;
-  final List<WorkoutPartValue> sequence;
+  final List<WorkoutPartValue> beginnerSequence;
+  final List<WorkoutPartValue> advancedSequence;
+  final List<WorkoutPartValue> professionalSequence;
+
   final int sets;
 
   WorkoutEntity(
@@ -12,12 +15,14 @@ class WorkoutEntity {
     this.name,
     this.description,
     this.sets,
-    this.sequence,
+    this.beginnerSequence,
+    this.advancedSequence,
+    this.professionalSequence,
   );
 
   @override
   String toString() {
-    return 'WorkoutEntity{id: $id, name: $name, description: $description, sequence: $sequence, sets: $sets}';
+    return 'WorkoutEntity{id: $id, name: $name, description: $description, beginner: $beginnerSequence, advanced: $advancedSequence, professional: $professionalSequence,sets: $sets}, ';
   }
 
   Map<String, Object> toJson() {
@@ -25,7 +30,10 @@ class WorkoutEntity {
       'id': id,
       'name': name,
       'description': description,
-      'sequence': sequence.map((e) => e.toJson()).toList(),
+      'beginnerSequence': beginnerSequence.map((e) => e.toJson()).toList(),
+      'advancedSequence': advancedSequence.map((e) => e.toJson()).toList(),
+      'professionalSequence':
+          professionalSequence.map((e) => e.toJson()).toList(),
       'sets': sets
     };
   }
@@ -36,7 +44,13 @@ class WorkoutEntity {
       json['name'] as String,
       json['description'] as String,
       json['sets'] as int,
-      (json['sequence'] as List)
+      (json['beginnerSequence'] as List)
+          .map((e) => WorkoutPartValue.fromJson(e))
+          .toList(),
+      (json['advancedSequence'] as List)
+          .map((e) => WorkoutPartValue.fromJson(e))
+          .toList(),
+      (json['professionalSequence'] as List)
           .map((e) => WorkoutPartValue.fromJson(e))
           .toList(),
     );

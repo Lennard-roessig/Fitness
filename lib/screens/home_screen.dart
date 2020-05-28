@@ -4,9 +4,9 @@ import 'package:fitness_workouts/screens/workout_generate_screen.dart';
 import 'package:fitness_workouts/screens/workout_list_view.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import '../util/tab_entry.dart';
 
-import 'exercise_list_view.dart';
-import 'workout_create_screen.dart';
+import 'activity_list_view.dart';
 
 class HomeScreen extends StatefulWidget {
   static const String route = '/home';
@@ -42,16 +42,16 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  List<Tab> get tabs {
+  List<TabEntry> get tabs {
     return [
-      Tab(
+      TabEntry(
         title: 'Exercise',
         icon: Icon(
           Icons.directions_run,
         ),
-        view: ExerciseListView(),
+        view: ActivityListView(),
       ),
-      Tab(
+      TabEntry(
         title: 'Workout',
         icon: Icon(
           Icons.home,
@@ -59,14 +59,15 @@ class _HomeScreenState extends State<HomeScreen> {
         view: WorkoutListView(),
         actionButton: FloatingActionButton(
           onPressed: () {
-            Provider.of<WorkoutProvider>(context, listen: false)
-                .createWorkout();
+            final workoutProvider =
+                Provider.of<WorkoutProvider>(context, listen: false);
+            workoutProvider.createWorkout();
             Navigator.of(context).pushNamed(WorkoutGenerateScreen.route);
           },
           child: Icon(Icons.add),
         ),
       ),
-      Tab(
+      TabEntry(
         title: 'Timer',
         icon: Icon(
           Icons.timer,
@@ -74,30 +75,5 @@ class _HomeScreenState extends State<HomeScreen> {
         view: TimerView(),
       ),
     ];
-  }
-}
-
-class Tab {
-  final Widget view;
-  final title;
-  final Icon icon;
-
-  final FloatingActionButton actionButton;
-
-  Tab({this.view, this.title, this.icon, this.actionButton});
-
-  Widget body() {
-    return view;
-  }
-
-  BottomNavigationBarItem get navigationBarItem {
-    return BottomNavigationBarItem(
-      title: Text(title),
-      icon: icon,
-    );
-  }
-
-  FloatingActionButton get floatingActionButton {
-    return actionButton;
   }
 }
