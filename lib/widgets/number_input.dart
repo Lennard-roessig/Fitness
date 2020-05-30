@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 
 enum NumberType { Int, Double }
@@ -24,9 +26,11 @@ class NumberInput extends StatefulWidget {
 
 class _NumberInputState extends State<NumberInput> {
   final _controller = TextEditingController();
+  Timer _timer;
 
   @override
   void dispose() {
+    _timer?.cancel();
     _controller.dispose();
     super.dispose();
   }
@@ -75,10 +79,15 @@ class _NumberInputState extends State<NumberInput> {
                   borderRadius: BorderRadius.circular(20),
                 ),
                 child: Center(
-                  child: IconButton(
-                    color: Theme.of(context).primaryColor,
-                    icon: Icon(Icons.add),
-                    onPressed: () => step(1),
+                  child: GestureDetector(
+                    onTapDown: (_) => longHold(true, 1),
+                    onTapCancel: () => longHold(false, 1),
+                    onTapUp: (_) => longHold(false, 1),
+                    onTap: () => step(1),
+                    child: Container(
+                      color: Colors.transparent,
+                      child: Icon(Icons.add, color: Colors.black),
+                    ),
                   ),
                 ),
               ),
@@ -90,10 +99,15 @@ class _NumberInputState extends State<NumberInput> {
                   borderRadius: BorderRadius.circular(20),
                 ),
                 child: Center(
-                  child: IconButton(
-                    color: Theme.of(context).primaryColor,
-                    icon: Icon(Icons.remove),
-                    onPressed: () => step(-1),
+                  child: GestureDetector(
+                    onTapDown: (_) => longHold(true, -1),
+                    onTapCancel: () => longHold(false, -1),
+                    onTapUp: (_) => longHold(false, -1),
+                    onTap: () => step(-1),
+                    child: Container(
+                      color: Colors.transparent,
+                      child: Icon(Icons.remove, color: Colors.black),
+                    ),
                   ),
                 ),
               ),
@@ -102,6 +116,16 @@ class _NumberInputState extends State<NumberInput> {
         ],
       ),
     );
+  }
+
+  void longHold(bool start, int direction) {
+    if (start) {
+      _timer = Timer.periodic(Duration(milliseconds: 100), (timer) {
+        step(direction);
+      });
+    } else {
+      _timer?.cancel();
+    }
   }
 
   void step(int direction) {

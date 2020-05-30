@@ -130,7 +130,7 @@ class WorkoutGenerateScreen extends StatelessWidget {
                 Provider.of<WorkoutProvider>(context, listen: false);
 
             selectedActivities
-                .map((element) => workoutProvider.createNewWorkoutPart().copy(
+                .map((element) => WorkoutPart.empty().copy(
                       activityId: element.id,
                       intervall: intervalls,
                       repetitions: repetitions,
@@ -138,10 +138,7 @@ class WorkoutGenerateScreen extends StatelessWidget {
                 .expand((element) {
               if (pausePosition == PausePositions.AfterEveryExercise &&
                   pause > 0)
-                return [
-                  element,
-                  workoutProvider.createNewPausePart().copy(intervall: pause)
-                ];
+                return [element, WorkoutPart.pause(intervall: pause)];
 
               return [element];
             }).forEach((element) =>
@@ -150,12 +147,10 @@ class WorkoutGenerateScreen extends StatelessWidget {
             if (rounds > 0) {
               if (pausePosition == PausePositions.AfterEveryRound && pause > 0)
                 workoutProvider.addNewWorkoutPart(
-                    workoutProvider.createNewPausePart().copy(intervall: pause),
-                    null);
+                    WorkoutPart.pause(intervall: pause), null);
 
               workoutProvider.addNewWorkoutPart(
-                  workoutProvider.createNewGroupPart().copy(rounds: rounds),
-                  null);
+                  WorkoutPart.group(rounds: rounds), null);
             }
 
             Navigator.of(context)

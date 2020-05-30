@@ -17,7 +17,6 @@ class WorkoutCreateScreen extends StatefulWidget {
 class _WorkoutCreateScreenState extends State<WorkoutCreateScreen>
     with SingleTickerProviderStateMixin {
   TabController _controller;
-  final view = WorkoutTimelineView();
 
   @override
   void initState() {
@@ -38,6 +37,8 @@ class _WorkoutCreateScreenState extends State<WorkoutCreateScreen>
 
   @override
   Widget build(BuildContext context) {
+    WorkoutProvider workoutProvider = Provider.of<WorkoutProvider>(context);
+
     return Scaffold(
       appBar: AppBar(
         title: Text('Workoute Create'),
@@ -54,7 +55,15 @@ class _WorkoutCreateScreenState extends State<WorkoutCreateScreen>
       ),
       body: TabBarView(
         controller: _controller,
-        children: [view, view, view],
+        children: [
+          for (final tab in tabs)
+            WorkoutTimelineView(
+              sequence: workoutProvider.getSequence(tab.data),
+              updateSequence: (newSequence) {
+                workoutProvider.updateWorkoutSequence(newSequence);
+              },
+            ),
+        ],
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {

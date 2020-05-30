@@ -1,6 +1,8 @@
 import 'dart:collection';
 import 'dart:math';
 
+import 'package:uuid/uuid.dart';
+
 import 'model/alarm_value.dart';
 import 'model/workout_entity.dart';
 import 'model/activity_entity.dart';
@@ -269,6 +271,47 @@ class WorkoutPart {
   })  : this._mutations = mutations,
         this._alarms = alarms,
         this._target = target;
+
+  WorkoutPart.pause({
+    this.index = 0,
+    this.repetitions = 0,
+    this.intervall = 0,
+    this.groupId = "",
+    List<Mutation> mutations = const [],
+    final List<Alarm> alarms = const [],
+    this.referenceGroupId = "",
+    this.isGroup = false,
+    this.rounds = 0,
+    this.isPause = true,
+    this.activityId = "",
+    final List<ExerciseTarget> target,
+    this.resistanceType,
+    this.resistanceWeight = 0,
+    this.relativeResistanceWeight = false,
+  })  : this._mutations = mutations,
+        this._alarms = alarms,
+        this._target = target;
+
+  WorkoutPart.group({
+    this.index = 0,
+    this.repetitions = 0,
+    this.intervall = 0,
+    this.groupId = "",
+    List<Mutation> mutations = const [],
+    final List<Alarm> alarms = const [],
+    String referenceGroupId = '',
+    this.isGroup = true,
+    this.rounds = 1,
+    this.isPause = false,
+    this.activityId = "",
+    final List<ExerciseTarget> target,
+    this.resistanceType,
+    this.resistanceWeight = 0,
+    this.relativeResistanceWeight = false,
+  })  : this._mutations = mutations,
+        this._alarms = alarms,
+        this._target = target,
+        this.referenceGroupId = referenceGroupId ?? Uuid().v4();
 
   WorkoutPartValue toEntity() {
     return WorkoutPartValue(

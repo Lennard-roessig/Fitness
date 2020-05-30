@@ -1,10 +1,12 @@
 import 'package:fitness_workouts/models.dart';
-import 'package:fitness_workouts/provider/workout_provider.dart';
-import 'package:fitness_workouts/widgets/activity_search_delegate.dart';
 import 'package:fitness_workouts/widgets/number_input.dart';
 import 'package:fitness_workouts/widgets/styled_alert_dialog.dart';
 import 'package:flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
+import 'package:fitness_workouts/widgets/styled_text_field.dart';
+import 'package:fitness_workouts/widgets/inverted_flat_button.dart';
+import 'package:fitness_workouts/widgets/sound_field.dart';
+import 'package:fitness_workouts/widgets/switch_input.dart';
 
 Future<double> numberInputDialog(
   BuildContext context,
@@ -39,104 +41,38 @@ Future<double> numberInputDialog(
   );
 }
 
-Future<WorkoutPart> workoutPartAddDialog(
-    BuildContext context, WorkoutProvider workoutProvider) {
-  return showDialog<WorkoutPart>(
-    context: context,
-    builder: (context) => StyledAlertDialog(
-      title: Text(
-        'Choose Art of Part',
-        textAlign: TextAlign.center,
-      ),
-      content: Container(
-        height: 300,
-        width: 250,
-        child: ListView(
-          children: <Widget>[
-            ListTile(
-              leading: Icon(Icons.fitness_center),
-              title: Text('Exercise'),
-              trailing: Icon(Icons.navigate_next),
-              onTap: () async {
-                Activity choosenActivity = await showSearch(
-                  context: context,
-                  delegate: ActivitySearch(
-                    mode: ActivitySearchSelectMode.Single,
-                  ),
-                );
-                if (choosenActivity == null) return;
-                var newPart = workoutProvider.createNewWorkoutPart();
-                newPart = newPart.copy(activityId: choosenActivity.id);
-                Navigator.of(context).pop(newPart);
-              },
-            ),
-            ListTile(
-              leading: Icon(Icons.group),
-              title: Text('Round'),
-              trailing: Icon(Icons.navigate_next),
-              onTap: () {
-                Navigator.of(context).pop(workoutProvider.createNewGroupPart());
-              },
-            ),
-            ListTile(
-              leading: Icon(Icons.pause),
-              title: Text('Pause'),
-              trailing: Icon(Icons.navigate_next),
-              onTap: () async {
-                final pause = workoutProvider.createNewPausePart();
-                double value = await numberInputDialog(
-                  context,
-                  'Pause Intervall',
-                  0,
-                  'sec',
-                );
-                Navigator.of(context).pop(
-                  pause.copy(
-                    intervall: value.toInt(),
-                  ),
-                );
-              },
-            ),
-            SizedBox(height: 20),
-            Column(
-              mainAxisSize: MainAxisSize.min,
-              children: <Widget>[
-                Text('Predefined Pauses (sec)'),
-                SizedBox(height: 10),
-                Wrap(
-                  alignment: WrapAlignment.spaceAround,
-                  runSpacing: 10,
-                  direction: Axis.horizontal,
-                  spacing: 10,
-                  children: [5, 10, 20, 30, 45, 60]
-                      .map(
-                        (e) => InkWell(
-                          onTap: () {
-                            final pause = workoutProvider.createNewPausePart();
-                            Navigator.of(context).pop(pause.copy(intervall: e));
-                          },
-                          child: Container(
-                            width: 30,
-                            height: 30,
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(15),
-                              color: Theme.of(context).accentColor,
-                            ),
-                            child: Center(child: Text('$e')),
-                          ),
-                        ),
-                      )
-                      .toList(),
-                ),
-              ],
-            ),
-          ],
-        ),
-      ),
-      onCancel: () => Navigator.of(context).pop(),
-    ),
-  );
-}
+//  Column(
+//               mainAxisSize: MainAxisSize.min,
+//               children: <Widget>[
+//                 Text('Predefined Pauses (sec)'),
+//                 SizedBox(height: 10),
+//                 Wrap(
+//                   alignment: WrapAlignment.spaceAround,
+//                   runSpacing: 10,
+//                   direction: Axis.horizontal,
+//                   spacing: 10,
+//                   children: [5, 10, 20, 30, 45, 60]
+//                       .map(
+//                         (e) => InkWell(
+//                           onTap: () {
+//                             final pause = WorkoutPart.pause();
+//                             Navigator.of(context).pop(pause.copy(intervall: e));
+//                           },
+//                           child: Container(
+//                             width: 30,
+//                             height: 30,
+//                             decoration: BoxDecoration(
+//                               borderRadius: BorderRadius.circular(15),
+//                               color: Theme.of(context).accentColor,
+//                             ),
+//                             child: Center(child: Text('$e')),
+//                           ),
+//                         ),
+//                       )
+//                       .toList(),
+//                 ),
+//               ],
+//             ),
 
 Future<bool> confirmationDialog(
     BuildContext context, String title, String content) {
@@ -167,4 +103,140 @@ void showInfoFlushbar(BuildContext context, String title, String message) {
     flushbarPosition: FlushbarPosition.BOTTOM,
     flushbarStyle: FlushbarStyle.FLOATING,
   )..show(context);
+}
+
+Future<List<Alarm>> openAlarmDialog(
+    BuildContext context, List<Alarm> activAlarms) {
+  return showDialog<List<Alarm>>(
+    context: context,
+    builder: (context) => StatefulBuilder(
+      builder: (context, setState) => StyledAlertDialog(
+        title: Text('Alarm'),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            for (final alarm in activAlarms) ...[
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  Text(
+                    alarm.label,
+                    style: TextStyle(fontSize: 14),
+                  ),
+                  Text(
+                    alarm.relativeTimestamp > 0
+                        ? (alarm.relativeTimestamp * 100).toStringAsFixed(2) +
+                            "%"
+                        : alarm.timestamp.toString(),
+                    style: TextStyle(fontSize: 14),
+                  ),
+                  Text(
+                    alarm.sound.name,
+                    style: TextStyle(fontSize: 14),
+                  ),
+                  GestureDetector(
+                    onTap: () => setState(() {
+                      activAlarms = activAlarms
+                          .map((e) => e == alarm ? e.copy(activ: !e.activ) : e)
+                          .toList();
+                    }),
+                    child: Icon(
+                      Icons.done,
+                      color: alarm.activ
+                          ? Theme.of(context).accentColor
+                          : Theme.of(context).primaryColor,
+                      size: 18,
+                    ),
+                  ),
+                ],
+              ),
+              SizedBox(
+                height: 10,
+              ),
+            ],
+            InvertedFlatButton(
+              child: Text('Custom'),
+              onPressed: () async {
+                final newAlarm = await showCustomAlert(context);
+                if (newAlarm != null) {
+                  setState(() {
+                    activAlarms = [...activAlarms, newAlarm];
+                  });
+                }
+              },
+            )
+          ],
+        ),
+        onFinish: () => Navigator.of(context).pop(activAlarms),
+      ),
+    ),
+  );
+}
+
+Future<Alarm> showCustomAlert(BuildContext context) {
+  String name;
+  Sound sound;
+  double time;
+
+  const options = const ['sec', '%'];
+  String type = 'sec';
+
+  return showDialog<Alarm>(
+    context: context,
+    builder: (context) => StyledAlertDialog(
+      title: Text('Custom Alarm'),
+      content: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: <Widget>[
+          Text('Name'),
+          StyledTextField(
+            expands: false,
+            onChange: (newName) => name = newName,
+          ),
+          SizedBox(
+            height: 10,
+          ),
+          Text('Sound'),
+          SoundField(
+            onChange: (newSound) => sound = newSound,
+          ),
+          SizedBox(
+            height: 10,
+          ),
+          Text('Time'),
+          SizedBox(
+            height: 5,
+          ),
+          Flexible(
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                NumberInput(
+                  onChange: (value) => time = value,
+                ),
+                SizedBox(width: 20),
+                SwitchInput(
+                  options: options,
+                  onChange: (index) => type = options[index],
+                ),
+              ],
+            ),
+          ),
+          SizedBox(
+            height: 5,
+          ),
+        ],
+      ),
+      onCancel: () => Navigator.of(context).pop(),
+      onFinish: () => Navigator.of(context).pop(
+        Alarm(
+          name,
+          true,
+          sound,
+          type == "sec" ? time.toInt() : 0,
+          type == "%" ? (time / 100) : 0,
+        ),
+      ),
+    ),
+  );
 }

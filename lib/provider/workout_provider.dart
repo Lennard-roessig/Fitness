@@ -5,8 +5,6 @@ import 'package:fitness_workouts/models.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:uuid/uuid.dart';
 
-enum GroupPosition { Head, Tail, None, Mid, HeadAndTail }
-
 class WorkoutProvider extends ChangeNotifier {
   final WorkoutRepository repository;
 
@@ -24,9 +22,6 @@ class WorkoutProvider extends ChangeNotifier {
           : workout.sequence(_selectedLevel));
   void selectLevel(WorkoutLevel level) {
     _selectedLevel = level;
-    // if (sequence.isEmpty) {
-    //   updateWorkoutSequence(workout.sequenceMap[WorkoutLevel.Beginner]);
-    // }
     notifyListeners();
   }
 
@@ -91,27 +86,6 @@ class WorkoutProvider extends ChangeNotifier {
     return newWorkout;
   }
 
-  int timeForIndex(index) {
-    assert(_selectedIndex != null);
-    int time = 0;
-    int lastGroupTime = 0;
-    for (int i = 0; i < index; i++) {
-      if (sequence[i].isGroup) {
-        time = time + ((time - lastGroupTime) * sequence[i].rounds);
-        lastGroupTime = time;
-        continue;
-      }
-      time += sequence[i].intervall;
-    }
-    return time;
-  }
-
-  void reorderWorkoutParts(int oldIndex, int newIndex) {}
-
-  int indexOfWorkoutPart(WorkoutPart part) {
-    return sequence.indexOf(part);
-  }
-
   void updateWorkoutPart(
       WorkoutPart newWorkoutPart, WorkoutPart oldWorkoutPart) {
     assert(newWorkoutPart != null);
@@ -129,13 +103,13 @@ class WorkoutProvider extends ChangeNotifier {
     if (toDelete.isGroup) updateAllGroups();
   }
 
-  void duplicateWorkoutPart(WorkoutPart toDuplicate) {
-    assert(toDuplicate != null);
-    assert(workout != null);
-    updateWorkoutSequence(sequence
-        .expand((x) => x == toDuplicate ? [x, x.copy()] : [x])
-        .toList());
-  }
+  // void duplicateWorkoutPart(WorkoutPart toDuplicate) {
+  //   assert(toDuplicate != null);
+  //   assert(workout != null);
+  //   updateWorkoutSequence(sequence
+  //       .expand((x) => x == toDuplicate ? [x, x.copy()] : [x])
+  //       .toList());
+  // }
 
   void addNewWorkoutPart(WorkoutPart newPart, WorkoutPart behindThis) {
     assert(workout != null);
@@ -149,34 +123,6 @@ class WorkoutProvider extends ChangeNotifier {
 
     updateWorkoutSequence(
         sequence.expand((x) => x == behindThis ? [x, newPart] : [x]).toList());
-  }
-
-  void switchWorkoutpartPosition(oldIndex, newIndex) {
-    if (newIndex > oldIndex) {
-      newIndex -= 1;
-    }
-    final tmp = sequence.where((x) => x != sequence[oldIndex]).toList();
-
-    updateWorkoutSequence([
-      ...tmp.sublist(0, newIndex),
-      sequence[oldIndex],
-      ...tmp.sublist(newIndex, tmp.length)
-    ]);
-  }
-
-  WorkoutPart createNewWorkoutPart() {
-    return WorkoutPart.empty();
-  }
-
-  WorkoutPart createNewGroupPart() {
-    return WorkoutPart.empty(
-      isGroup: true,
-      referenceGroupId: Uuid().v4(),
-    );
-  }
-
-  WorkoutPart createNewPausePart() {
-    return WorkoutPart.empty(isPause: true);
   }
 
   void updateAllGroups() {
@@ -196,31 +142,31 @@ class WorkoutProvider extends ChangeNotifier {
     for (int i = sequence.length - 1; i >= 0; i--) {}
   }
 
-  GroupPosition groupPositionOfWorkout(WorkoutPart part) {
-    assert(part != null);
-    assert(workout != null);
-    if (part.referenceGroupId.isNotEmpty) return GroupPosition.Tail;
-    if (part.groupId.isEmpty) return GroupPosition.None;
-    for (final element in sequence) {
-      if (element.groupId == part.groupId) {
-        if (element == part)
-          return GroupPosition.Head;
-        else
-          break;
-      }
-    }
+  // GroupPosition groupPositionOfWorkout(WorkoutPart part) {
+  //   assert(part != null);
+  //   assert(workout != null);
+  //   if (part.referenceGroupId.isNotEmpty) return GroupPosition.Tail;
+  //   if (part.groupId.isEmpty) return GroupPosition.None;
+  //   for (final element in sequence) {
+  //     if (element.groupId == part.groupId) {
+  //       if (element == part)
+  //         return GroupPosition.Head;
+  //       else
+  //         break;
+  //     }
+  //   }
 
-    for (final element in sequence.reversed) {
-      if (element.groupId == part.groupId ||
-          element.referenceGroupId == part.groupId) {
-        if (element == part)
-          return GroupPosition.Tail;
-        else
-          break;
-      }
-    }
-    return GroupPosition.Mid;
-  }
+  //   for (final element in sequence.reversed) {
+  //     if (element.groupId == part.groupId ||
+  //         element.referenceGroupId == part.groupId) {
+  //       if (element == part)
+  //         return GroupPosition.Tail;
+  //       else
+  //         break;
+  //     }
+  //   }
+  //   return GroupPosition.Mid;
+  // }
 
   void updateWorkoutSequence(List<WorkoutPart> newSequence) {
     updateWorkout(
@@ -231,5 +177,9 @@ class WorkoutProvider extends ChangeNotifier {
     );
     updateAllGroups();
     notifyListeners();
+  }
+
+  List<WorkoutPart> getSequence(WorkoutLevel level) {
+    return workout.sequence(level);
   }
 }

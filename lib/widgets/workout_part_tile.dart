@@ -1,82 +1,86 @@
+import 'package:fitness_workouts/provider/activity_provider.dart';
 import 'package:fitness_workouts/provider/workout_provider.dart';
+import 'package:fitness_workouts/screens/workout_timeline_view.dart';
+import 'package:fitness_workouts/util/dialogs.dart';
 import 'package:fitness_workouts/util/time_format.dart';
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../models.dart';
+import 'activity_search_delegate.dart';
+import 'menu_icon_button.dart';
 import 'workout_part_tile_group.dart';
 import 'workout_part_tile_pause.dart';
 import 'workout_part_tile_activity.dart';
 
 class WorkoutPartTile extends StatelessWidget {
+  final void Function(WorkoutPart oldPart, WorkoutPart newPart) update;
+  final void Function(WorkoutPart part) add;
+  final void Function(WorkoutPart part) delete;
+  final void Function(WorkoutPart part) tab;
+
   static const double height = 50;
   static const double width = 30;
 
   final WorkoutPart workoutpart;
   final int time;
-  final Widget menu;
-  final Function(WorkoutPart) onTap;
+  final bool isActiv;
 
   const WorkoutPartTile({
     Key key,
     this.workoutpart,
     this.time,
-    this.menu,
-    this.onTap,
+    this.isActiv,
+    this.update,
+    this.add,
+    this.delete,
+    this.tab,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<WorkoutProvider>(
-      builder: (_, provider, child) => Container(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: <Widget>[
+    return Container(
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: <Widget>[
+          Row(
+            children: <Widget>[
+              Expanded(
+                child: GestureDetector(
+                  onTap: () => onTab(context),
+                  child: Dismissible(
+                    key: UniqueKey(),
+                    onDismissed: (direction) => delete(workoutpart),
+                    child: showPart,
+                  ),
+                ),
+              ),
+              timeDot(context),
+              timeLabel(context),
+            ],
+          ),
+          if (activ)
             Row(
               children: <Widget>[
                 Expanded(
-                  child: GestureDetector(
-                    onTap: () => onTap(workoutpart),
-                    child: Dismissible(
-                      key: UniqueKey(),
-                      onDismissed: (direction) =>
-                          provider.deleteWorkoutPart(workoutpart),
-                      child: Container(
-                        padding: EdgeInsets.all(10),
-                        decoration: BoxDecoration(
-                          color: Theme.of(context).primaryColor,
-                          borderRadius: BorderRadius.circular(15),
-                        ),
-                        // background: Container(color: Colors.red),
-                        child: showPart,
-                      ),
-                    ),
-                  ),
+                  child: menu(context),
                 ),
-                ...timelineWorkoutPart(
-                  context,
-                  groupPosition: provider.groupPositionOfWorkout(workoutpart),
-                ),
+                SizedBox(width: 64)
+                // ...timelineMenu(
+                //     context,
+                //     workoutpart.groupId.isNotEmpty &&
+                //         provider.groupPositionOfWorkout(workoutpart) !=
+                //             GroupPosition.Tail),
               ],
             ),
-            if (menu != null)
-              Row(
-                children: <Widget>[
-                  Expanded(
-                    child: menu,
-                  ),
-                  ...timelineMenu(
-                      context,
-                      workoutpart.groupId.isNotEmpty &&
-                          provider.groupPositionOfWorkout(workoutpart) !=
-                              GroupPosition.Tail),
-                ],
-              ),
-          ],
-        ),
+        ],
       ),
     );
+  }
+
+  bool get activ {
+    return isActiv && !workoutpart.isGroup;
   }
 
   Widget get showPart {
@@ -87,91 +91,30 @@ class WorkoutPartTile extends StatelessWidget {
     return WorkoutPartTileActivity(workoutPart: workoutpart);
   }
 
-  List<Widget> timelineWorkoutPart(
-    BuildContext context, {
-    groupPosition = GroupPosition.None,
-  }) {
-    return [
-      Container(
-        margin: EdgeInsets.only(left: 10),
-        width: width,
-        alignment: Alignment.center,
-        child: Stack(
-          alignment: Alignment.center,
-          children: <Widget>[
-            if (workoutpart.groupId.isNotEmpty)
-              Container(
-                height: height,
-                width: width,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.only(
-                    topLeft: Radius.circular(
-                        groupPosition == GroupPosition.Head ? 15 : 0),
-                    topRight: Radius.circular(
-                        groupPosition == GroupPosition.Head ? 15 : 0),
-                    bottomRight: Radius.circular(
-                        groupPosition == GroupPosition.Tail ? 15 : 0),
-                    bottomLeft: Radius.circular(
-                        groupPosition == GroupPosition.Tail ? 15 : 0),
-                  ),
-                  color: Theme.of(context).accentColor,
-                ),
-              ),
-            if (workoutpart.groupId.isNotEmpty)
-              Container(
-                height: groupPosition == GroupPosition.Head ||
-                        groupPosition == GroupPosition.Tail
-                    ? height - 0.5
-                    : height,
-                margin: EdgeInsets.only(
-                  top: groupPosition == GroupPosition.Head ? 0.5 : 0,
-                  bottom: groupPosition == GroupPosition.Tail ? 0.5 : 0,
-                ),
-                width: (workoutpart.groupId.isNotEmpty ||
-                        workoutpart.referenceGroupId.isNotEmpty)
-                    ? width - 1
-                    : width,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.only(
-                    topLeft: Radius.circular(
-                        groupPosition == GroupPosition.Head ? 15 : 0),
-                    topRight: Radius.circular(
-                        groupPosition == GroupPosition.Head ? 15 : 0),
-                    bottomRight: Radius.circular(
-                        groupPosition == GroupPosition.Tail ? 15 : 0),
-                    bottomLeft: Radius.circular(
-                        groupPosition == GroupPosition.Tail ? 15 : 0),
-                  ),
-                  color: Theme.of(context).scaffoldBackgroundColor,
-                ),
-              ),
-            Container(
-              width: 15,
-              height: 15,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(50),
-                color: Theme.of(context).accentColor,
-              ),
-            ),
-            Container(
-              height: height,
-              width: 1,
-              color: Theme.of(context).accentColor,
-            ),
-          ],
-        ),
-      ),
-      SizedBox(
-        width: 5,
-      ),
-      SizedBox(
-        width: 30,
+  Widget timeDot(BuildContext context) {
+    return Container(
+      height: 15,
+      width: 15,
+      margin: EdgeInsets.only(left: 15, right: 10),
+      decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(8),
+          color: Theme.of(context).accentColor),
+    );
+  }
+
+  Widget timeLabel(BuildContext context) {
+    return SizedBox(
+      width: 24,
+      child: FittedBox(
         child: Text(
           formatSecondsIntoMin(time),
-          style: TextStyle(fontSize: 11),
+          style: TextStyle(
+            color: Theme.of(context).secondaryHeaderColor,
+            fontSize: 12,
+          ),
         ),
-      )
-    ];
+      ),
+    );
   }
 
   List<Widget> timelineMenu(BuildContext context, bool isInGroup) {
@@ -208,6 +151,156 @@ class WorkoutPartTile extends StatelessWidget {
         width: 35,
       )
     ];
+  }
+
+  Widget menu(BuildContext context) {
+    return Container(
+      margin: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          MenuItem(
+            Icons.control_point_duplicate,
+            actionTarget: MenuItemActionTarget.PauseAndActivity,
+            action: () {
+              add(workoutpart.copy());
+            },
+          ),
+          MenuItem(
+            Icons.timer,
+            actionTarget: MenuItemActionTarget.PauseAndActivity,
+            action: () async {
+              final listOfAlarms =
+                  await openAlarmDialog(context, workoutpart.alarms);
+              if (listOfAlarms != null) {
+                final newPart = workoutpart.copy(alarms: listOfAlarms);
+                update(workoutpart, newPart);
+              }
+            },
+          ),
+          MenuItem(
+            Icons.show_chart,
+            actionTarget: MenuItemActionTarget.Activity,
+          ),
+          MenuItem(
+            Icons.directions_run,
+            actionTarget: MenuItemActionTarget.Activity,
+            action: () async {
+              final activityProvider =
+                  Provider.of<ActivityProvider>(context, listen: false);
+              final choosenActivity = await showSearch(
+                context: context,
+                delegate: ActivitySearch(
+                  mode: ActivitySearchSelectMode.Single,
+                  selected: workoutpart.activityId.isNotEmpty
+                      ? [activityProvider.activityById(workoutpart.activityId)]
+                      : [],
+                ),
+              );
+              if (choosenActivity == null) return;
+              final newPart = workoutpart.copy(activityId: choosenActivity.id);
+              update(workoutpart, newPart);
+            },
+          ),
+          MenuItem(
+            Icons.replay,
+            actionTarget: MenuItemActionTarget.Group,
+            action: () async {
+              double newValue = await numberInputDialog(
+                context,
+                'Rounds',
+                workoutpart.rounds.toDouble(),
+                'rounds',
+              );
+              if (newValue == null) return;
+              final newPart = workoutpart.copy(rounds: newValue.toInt());
+              update(workoutpart, newPart);
+            },
+          ),
+          MenuItem(
+            Icons.access_time,
+            actionTarget: MenuItemActionTarget.PauseAndActivity,
+            action: () async {
+              double newValue = await numberInputDialog(
+                context,
+                'Intervall',
+                workoutpart.intervall.toDouble(),
+                'sec',
+              );
+              if (newValue == null) return;
+              final newPart = workoutpart.copy(intervall: newValue.toInt());
+              update(workoutpart, newPart);
+            },
+          ),
+          MenuItem(
+            Icons.repeat,
+            actionTarget: MenuItemActionTarget.Activity,
+            action: () async {
+              double newValue = await numberInputDialog(
+                context,
+                'Repetition',
+                workoutpart.repetitions.toDouble(),
+                'reps',
+              );
+              if (newValue == null) return;
+              final newPart = workoutpart.copy(repetitions: newValue.toInt());
+              update(workoutpart, newPart);
+            },
+          ),
+          // MenuItem(
+          //   Icons.delete_outline,
+          //   actionTarget: MenuItemActionTarget.All,
+          //   action: () async {
+          //     bool confirmed = await confirmationDialog(
+          //         context, 'Delete?', 'You want permantly delete this part?');
+          //     if (confirmed != null && confirmed) delete(workoutpart);
+          //   },
+          // ),
+        ]
+            .where((element) {
+              switch (element.actionTarget) {
+                case MenuItemActionTarget.Activity:
+                  return !workoutpart.isGroup && !workoutpart.isPause;
+                  break;
+                case MenuItemActionTarget.Group:
+                  return workoutpart.isGroup;
+                  break;
+                case MenuItemActionTarget.Pause:
+                  return workoutpart.isPause;
+                  break;
+                case MenuItemActionTarget.PauseAndActivity:
+                  return workoutpart.isPause || !workoutpart.isGroup;
+                  break;
+                case MenuItemActionTarget.All:
+                default:
+                  return true;
+                  break;
+              }
+            })
+            .map((e) => MenuIconButton(
+                  action: e.action,
+                  icon: e.icon,
+                ))
+            .toList(),
+      ),
+    );
+  }
+
+  void onTab(BuildContext context) async {
+    if (workoutpart.isGroup) {
+      print(workoutpart.rounds);
+      double newValue = await numberInputDialog(
+        context,
+        'Rounds',
+        workoutpart.rounds.toDouble(),
+        '',
+      );
+      if (newValue == null) return;
+      final newPart = workoutpart.copy(rounds: newValue.toInt());
+      update(workoutpart, newPart);
+      return;
+    }
+    tab(workoutpart);
   }
 }
 

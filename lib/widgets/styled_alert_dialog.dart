@@ -26,35 +26,37 @@ class StyledAlertDialog extends StatelessWidget {
         ),
       ),
       title: title,
-      content: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: <Widget>[
-          content,
-          if (this.onCancel != null && this.onFinish != null)
-            SizedBox(
-              height: 20,
+      content: SingleChildScrollView(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: <Widget>[
+            content,
+            if (this.onCancel != null && this.onFinish != null)
+              SizedBox(
+                height: 20,
+              ),
+            Row(
+              children: <Widget>[
+                Spacer(),
+                if (this.onCancel != null)
+                  InvertedFlatButton(
+                    child: Text('Cancel'),
+                    onPressed: this.onCancel,
+                  ),
+                if (this.onCancel != null && this.onFinish != null)
+                  SizedBox(
+                    width: 10,
+                  ),
+                if (this.onFinish != null)
+                  RaisedButton(
+                    child: Text('Apply'),
+                    onPressed: this.onFinish,
+                    color: Theme.of(context).accentColor,
+                  ),
+              ],
             ),
-          Row(
-            children: <Widget>[
-              Spacer(),
-              if (this.onCancel != null)
-                InvertedFlatButton(
-                  child: Text('Cancel'),
-                  onPressed: this.onCancel,
-                ),
-              if (this.onCancel != null && this.onFinish != null)
-                SizedBox(
-                  width: 10,
-                ),
-              if (this.onFinish != null)
-                RaisedButton(
-                  child: Text('Apply'),
-                  onPressed: this.onFinish,
-                  color: Theme.of(context).accentColor,
-                ),
-            ],
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
