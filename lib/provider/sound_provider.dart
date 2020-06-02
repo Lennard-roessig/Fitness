@@ -1,6 +1,5 @@
 import 'dart:collection';
 
-import 'package:fitness_workouts/model/activities_repository.dart';
 import 'package:fitness_workouts/models.dart';
 import 'package:flutter/cupertino.dart';
 

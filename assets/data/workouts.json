@@ -11,7 +11,7 @@
                 {
                     "index": 0,
                     "repetitions": 0,
-                    "intervall": 30,
+                    "intervall": 5,
                     "groupId": "",
                     "mutations": [
                         {
@@ -39,7 +39,7 @@
                             "relativeTimestamp": 0.5,
                             "sound": {
                                 "name": "Sound_1",
-                                "path": "assets/sound_1.mp3",
+                                "path": "assets/sounds/service-bell_daniel_simion.mp3",
                                 "local": true
                             }
                         }
@@ -59,7 +59,7 @@
                 {
                     "index": 1,
                     "repetitions": 0,
-                    "intervall": 30,
+                    "intervall": 10,
                     "groupId": "test_group",
                     "mutations": [
                         {
@@ -87,7 +87,7 @@
                             "relativeTimestamp": 0.5,
                             "sound": {
                                 "name": "Sound_1",
-                                "path": "assets/sound_1.mp3",
+                                "path": "assets/sounds/service-bell_daniel_simion.mp3",
                                 "local": true
                             }
                         }
@@ -135,7 +135,7 @@
                             "relativeTimestamp": 0.5,
                             "sound": {
                                 "name": "Sound_1",
-                                "path": "assets/sound_1.mp3",
+                                "path": "assets/sounds/service-bell_daniel_simion.mp3",
                                 "local": true
                             }
                         },
@@ -146,7 +146,7 @@
                             "relativeTimestamp": 0.33,
                             "sound": {
                                 "name": "Sound_1",
-                                "path": "assets/sound_1.mp3",
+                                "path": "assets/sounds/service-bell_daniel_simion.mp3",
                                 "local": true
                             }
                         }

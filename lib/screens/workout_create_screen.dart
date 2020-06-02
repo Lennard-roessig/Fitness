@@ -59,9 +59,8 @@ class _WorkoutCreateScreenState extends State<WorkoutCreateScreen>
           for (final tab in tabs)
             WorkoutTimelineView(
               sequence: workoutProvider.getSequence(tab.data),
-              updateSequence: (newSequence) {
-                workoutProvider.updateWorkoutSequence(newSequence);
-              },
+              updateSequence: workoutProvider.updateWorkoutSequence,
+              copySequence: () => copySequence(workoutProvider),
             ),
         ],
       ),
@@ -78,6 +77,45 @@ class _WorkoutCreateScreenState extends State<WorkoutCreateScreen>
     final workoutProvider =
         Provider.of<WorkoutProvider>(context, listen: false);
     workoutProvider.selectLevel(tabs[index].data);
+  }
+
+  void copySequence(WorkoutProvider workoutProvider) {
+    switch (workoutProvider.level) {
+      case WorkoutLevel.Beginner:
+        final advanced = workoutProvider.getSequence(WorkoutLevel.Advanced);
+        if (advanced.isNotEmpty) {
+          workoutProvider.copyFrom(WorkoutLevel.Advanced);
+          return;
+        }
+        final professional =
+            workoutProvider.getSequence(WorkoutLevel.Professional);
+        if (professional.isNotEmpty)
+          workoutProvider.copyFrom(WorkoutLevel.Professional);
+        break;
+      case WorkoutLevel.Advanced:
+        final beginner = workoutProvider.getSequence(WorkoutLevel.Beginner);
+        if (beginner.isNotEmpty) {
+          workoutProvider.copyFrom(WorkoutLevel.Beginner);
+          return;
+        }
+        final professional =
+            workoutProvider.getSequence(WorkoutLevel.Professional);
+        if (professional.isNotEmpty)
+          workoutProvider.copyFrom(WorkoutLevel.Professional);
+        break;
+      case WorkoutLevel.Professional:
+        final advanced = workoutProvider.getSequence(WorkoutLevel.Advanced);
+        if (advanced.isNotEmpty) {
+          workoutProvider.copyFrom(WorkoutLevel.Advanced);
+          return;
+        }
+        final beginner = workoutProvider.getSequence(WorkoutLevel.Beginner);
+        if (beginner.isNotEmpty) {
+          workoutProvider.copyFrom(WorkoutLevel.Beginner);
+          return;
+        }
+        break;
+    }
   }
 
   List<TabEntry> get tabs {

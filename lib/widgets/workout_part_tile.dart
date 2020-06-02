@@ -47,12 +47,24 @@ class WorkoutPartTile extends StatelessWidget {
           Row(
             children: <Widget>[
               Expanded(
-                child: GestureDetector(
-                  onTap: () => onTab(context),
-                  child: Dismissible(
-                    key: UniqueKey(),
-                    onDismissed: (direction) => delete(workoutpart),
-                    child: showPart,
+                child: Container(
+                  decoration: BoxDecoration(
+                    border:
+                        workoutpart.isGroup || workoutpart.groupId.isNotEmpty
+                            ? Border(
+                                left: BorderSide(
+                                    color: Theme.of(context).accentColor,
+                                    width: 0.5),
+                              )
+                            : Border(),
+                  ),
+                  child: GestureDetector(
+                    onTap: () => onTab(context),
+                    child: Dismissible(
+                      key: UniqueKey(),
+                      onDismissed: (direction) => delete(workoutpart),
+                      child: showPart,
+                    ),
                   ),
                 ),
               ),

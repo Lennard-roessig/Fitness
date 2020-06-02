@@ -27,9 +27,9 @@ void main() {
         ),
         ChangeNotifierProvider(
           create: (_) => SoundProvider(sounds: [
-            Sound("Sound 1", "assets/sound_1.mp3", true),
-            Sound("Sound 2", "assets/sound_1.mp3", true),
-            Sound("Sound 3", "assets/sound_1.mp3", true),
+            Sound("Sound 1", "assets/service-bell_daniel_simion.mp3", true),
+            Sound("Sound 2", "assets/service-bell_daniel_simion.mp3", true),
+            Sound("Sound 3", "assets/service-bell_daniel_simion.mp3", true),
           ]),
         ),
       ],

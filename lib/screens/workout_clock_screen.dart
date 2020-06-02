@@ -14,14 +14,16 @@ class WorkoutClockScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<WorkoutProvider>(
-      builder: (_, workoutProvider, __) => ChangeNotifierProvider(
+    return Consumer2<WorkoutProvider, ActivityProvider>(
+      builder: (_, workoutProvider, activityProvider, __) =>
+          ChangeNotifierProvider(
         create: (context) => ClockProvider(
           level1: WorkoutLevel.Beginner,
           workout: workoutProvider.workout,
+          activityById: activityProvider.activityById,
         ),
-        child: Consumer2<ClockProvider, ActivityProvider>(
-          builder: (_, clockProvider, activityProvider, __) => WillPopScope(
+        child: Consumer<ClockProvider>(
+          builder: (_, clockProvider, __) => WillPopScope(
             onWillPop: () {
               clockProvider.stopTimer();
               return Future.value(true);
@@ -31,7 +33,6 @@ class WorkoutClockScreen extends StatelessWidget {
               body: Stack(
                 children: <Widget>[
                   Container(
-                    margin: EdgeInsets.only(top: 20),
                     color: Theme.of(context).primaryColor,
                     width: double.infinity,
                     height: 200,
@@ -40,17 +41,20 @@ class WorkoutClockScreen extends StatelessWidget {
                     child: Column(
                       children: <Widget>[
                         SizedBox(
-                          height: 150,
+                          height: 120,
                         ),
-                        DigitalClock(
-                          absTime: clockProvider.elapsedSeconds,
-                          relativeTime: clockProvider
-                              .relativeElapsedSeconds(WorkoutLevel.Beginner),
-                          relativeMax: clockProvider
-                              .currentWorkoutpart(WorkoutLevel.Beginner)
-                              .intervall,
-                          diameter: 200,
-                        ),
+                        clockProvider.finished(WorkoutLevel.Beginner)
+                            ? Text('Finished')
+                            : DigitalClock(
+                                absTime: clockProvider.elapsedSeconds,
+                                relativeTime:
+                                    clockProvider.relativeElapsedSeconds(
+                                        WorkoutLevel.Beginner),
+                                relativeMax: clockProvider
+                                    .currentWorkoutpart(WorkoutLevel.Beginner)
+                                    .intervall,
+                                diameter: 200,
+                              ),
                         SizedBox(
                           height: 16,
                         ),
@@ -110,20 +114,6 @@ class WorkoutClockScreen extends StatelessWidget {
                                   ),
                                 ),
                               ),
-
-                            // ...clockProvider
-                            //     .nextParts(
-                            //       WorkoutLevel.Beginner,
-                            //     )
-                            //     .map(
-                            //       (e) => Text(
-                            //         name(
-                            //           e,
-                            //           activityProvider,
-                            //         ),
-                            //       ),
-                            //     )
-                            //     .toList(),
                           ],
                         ),
                       ],
@@ -140,7 +130,7 @@ class WorkoutClockScreen extends StatelessWidget {
 
   String name(WorkoutPart part, ActivityProvider activityProvider) {
     if (part.isPause) return "Pause";
-    return activityProvider.activityById(part.activityId).name;
+    return activityProvider.activityById(part.activityId)?.name ?? "";
   }
 }
 

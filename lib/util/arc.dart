@@ -56,8 +56,8 @@ class MyPainter extends CustomPainter {
       Paint()..color = backgroundColor,
     );
 
-    final innerHeight1 = size.height - 8;
-    final innerWidth1 = size.width - 8;
+    final innerHeight1 = size.height - 18;
+    final innerWidth1 = size.width - 18;
     canvas.drawArc(
       Rect.fromCenter(
         center: Offset(size.height / 2, size.width / 2),
@@ -82,8 +82,8 @@ class MyPainter extends CustomPainter {
       Paint()..color = ringColor,
     );
 
-    final innerHeight = size.height - 28;
-    final innerWidth = size.width - 28;
+    final innerHeight = size.height - 38;
+    final innerWidth = size.width - 38;
     canvas.drawArc(
       Rect.fromCenter(
         center: Offset(size.height / 2, size.width / 2),

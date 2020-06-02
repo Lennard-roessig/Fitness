@@ -26,6 +26,8 @@ dependencies:
   provider: ^4.0.4
   uuid: ^2.0.4
   flushbar: ^1.10.4
+  soundpool: ^1.1.0
+  flutter_tts: ^1.2.0
 
 
   # The following adds the Cupertino Icons font to your application.
@@ -52,6 +54,7 @@ flutter:
   assets:
     - assets/images/
     - assets/data/
+    - assets/sounds/
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.

@@ -20,8 +20,9 @@ Work on Timeline
 class WorkoutTimelineView extends StatefulWidget {
   final List<WorkoutPart> sequence;
   final Function(List<WorkoutPart> sequence) updateSequence;
+  final void Function() copySequence;
 
-  WorkoutTimelineView({this.sequence, this.updateSequence});
+  WorkoutTimelineView({this.sequence, this.updateSequence, this.copySequence});
 
   @override
   _WorkoutTimelineViewState createState() => _WorkoutTimelineViewState();
@@ -59,29 +60,37 @@ class _WorkoutTimelineViewState extends State<WorkoutTimelineView> {
             ),
             Padding(
               padding: EdgeInsets.symmetric(vertical: 20),
-              child: Theme(
-                data:
-                    Theme.of(context).copyWith(canvasColor: Colors.transparent),
-                child: ReorderableListView(
-                  children: [
-                    for (final workoutpart in widget.sequence)
-                      Padding(
-                        key: ObjectKey(workoutpart),
-                        padding: EdgeInsets.symmetric(vertical: 5),
-                        child: WorkoutPartTile(
-                          workoutpart: workoutpart,
-                          time: time(workoutpart),
-                          add: add,
-                          delete: delete,
-                          update: update,
-                          tab: tab,
-                          isActiv: selected == workoutpart,
-                        ),
+              child: widget.sequence.isEmpty
+                  ? Center(
+                      child: RaisedButton(
+                        color: Theme.of(context).accentColor,
+                        child: Text('Start from previous Sequence'),
+                        onPressed: widget.copySequence,
                       ),
-                  ],
-                  onReorder: reorder,
-                ),
-              ),
+                    )
+                  : Theme(
+                      data: Theme.of(context)
+                          .copyWith(canvasColor: Colors.transparent),
+                      child: ReorderableListView(
+                        children: [
+                          for (final workoutpart in widget.sequence)
+                            Padding(
+                              key: ObjectKey(workoutpart),
+                              padding: EdgeInsets.symmetric(vertical: 5),
+                              child: WorkoutPartTile(
+                                workoutpart: workoutpart,
+                                time: time(workoutpart),
+                                add: add,
+                                delete: delete,
+                                update: update,
+                                tab: tab,
+                                isActiv: selected == workoutpart,
+                              ),
+                            ),
+                        ],
+                        onReorder: reorder,
+                      ),
+                    ),
             ),
             Align(
               alignment: Alignment.bottomLeft,

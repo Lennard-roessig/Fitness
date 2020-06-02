@@ -299,7 +299,7 @@ class WorkoutPart {
     this.groupId = "",
     List<Mutation> mutations = const [],
     final List<Alarm> alarms = const [],
-    String referenceGroupId = '',
+    String referenceGroupId,
     this.isGroup = true,
     this.rounds = 1,
     this.isPause = false,
