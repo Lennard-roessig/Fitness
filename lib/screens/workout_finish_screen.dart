@@ -1,7 +1,7 @@
-import 'package:fitness_workouts/provider/workout_provider.dart';
-import 'package:fitness_workouts/screens/home_screen.dart';
+import 'package:fitness_workouts/blocs/workout_create/workout_create.dart';
 import 'package:fitness_workouts/widgets/styled_text_field.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:provider/provider.dart';
 
 class WorkoutFinishScreen extends StatelessWidget {
@@ -12,6 +12,11 @@ class WorkoutFinishScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final information =
+        ModalRoute.of(context).settings.arguments as SetInformation;
+
+    name = information.name ?? "";
+    description = information.description ?? "";
     return Scaffold(
       appBar: AppBar(
         title: Text('Finish Workout'),
@@ -24,6 +29,7 @@ class WorkoutFinishScreen extends StatelessWidget {
           children: <Widget>[
             Text('Name'),
             StyledTextField(
+              initialValue: name,
               expands: false,
               onChange: (val) => name = val,
             ),
@@ -32,6 +38,7 @@ class WorkoutFinishScreen extends StatelessWidget {
             ),
             Text('Description'),
             StyledTextField(
+              initialValue: description,
               expands: false,
               maxLines: 5,
               onChange: (val) => description = val,
@@ -41,13 +48,10 @@ class WorkoutFinishScreen extends StatelessWidget {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          final workoutProvider =
-              Provider.of<WorkoutProvider>(context, listen: false);
-
-          workoutProvider.updateWorkout(workoutProvider.workout
-              .copy(name: name, description: description));
-
-          Navigator.popUntil(context, (route) => route.isFirst);
+          if (this.name == null || this.name.isEmpty) return;
+          if (this.description == null || this.description.isEmpty) return;
+          Navigator.of(context)
+              .pop(SetInformation(name: name, description: description));
         },
         child: Icon(
           Icons.done,

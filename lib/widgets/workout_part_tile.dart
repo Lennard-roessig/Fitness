@@ -1,11 +1,8 @@
-import 'package:fitness_workouts/provider/activity_provider.dart';
-import 'package:fitness_workouts/provider/workout_provider.dart';
 import 'package:fitness_workouts/screens/workout_timeline_view.dart';
 import 'package:fitness_workouts/util/dialogs.dart';
 import 'package:fitness_workouts/util/time_format.dart';
 
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 
 import '../models.dart';
 import 'activity_search_delegate.dart';
@@ -15,21 +12,23 @@ import 'workout_part_tile_pause.dart';
 import 'workout_part_tile_activity.dart';
 
 class WorkoutPartTile extends StatelessWidget {
-  final void Function(WorkoutPart oldPart, WorkoutPart newPart) update;
-  final void Function(WorkoutPart part) add;
-  final void Function(WorkoutPart part) delete;
-  final void Function(WorkoutPart part) tab;
+  final void Function(Activity oldPart, Activity newPart) update;
+  final void Function(Activity part) add;
+  final void Function(Activity part) delete;
+  final void Function(Activity part) tab;
 
   static const double height = 50;
   static const double width = 30;
 
-  final WorkoutPart workoutpart;
+  final Activity activity;
+  final String name;
   final int time;
   final bool isActiv;
 
   const WorkoutPartTile({
     Key key,
-    this.workoutpart,
+    this.activity,
+    this.name,
     this.time,
     this.isActiv,
     this.update,
@@ -49,20 +48,19 @@ class WorkoutPartTile extends StatelessWidget {
               Expanded(
                 child: Container(
                   decoration: BoxDecoration(
-                    border:
-                        workoutpart.isGroup || workoutpart.groupId.isNotEmpty
-                            ? Border(
-                                left: BorderSide(
-                                    color: Theme.of(context).accentColor,
-                                    width: 0.5),
-                              )
-                            : Border(),
+                    border: activity.isGroup || activity.groupId.isNotEmpty
+                        ? Border(
+                            left: BorderSide(
+                                color: Theme.of(context).accentColor,
+                                width: 0.5),
+                          )
+                        : Border(),
                   ),
                   child: GestureDetector(
                     onTap: () => onTab(context),
                     child: Dismissible(
                       key: UniqueKey(),
-                      onDismissed: (direction) => delete(workoutpart),
+                      onDismissed: (direction) => delete(activity),
                       child: showPart,
                     ),
                   ),
@@ -79,11 +77,6 @@ class WorkoutPartTile extends StatelessWidget {
                   child: menu(context),
                 ),
                 SizedBox(width: 64)
-                // ...timelineMenu(
-                //     context,
-                //     workoutpart.groupId.isNotEmpty &&
-                //         provider.groupPositionOfWorkout(workoutpart) !=
-                //             GroupPosition.Tail),
               ],
             ),
         ],
@@ -92,15 +85,13 @@ class WorkoutPartTile extends StatelessWidget {
   }
 
   bool get activ {
-    return isActiv && !workoutpart.isGroup;
+    return isActiv && !activity.isGroup;
   }
 
   Widget get showPart {
-    if (workoutpart.isPause)
-      return WorkoutPartTilePause(workoutPart: workoutpart);
-    if (workoutpart.isGroup)
-      return WorkoutPartTileGroup(workoutPart: workoutpart);
-    return WorkoutPartTileActivity(workoutPart: workoutpart);
+    if (activity.isPause) return WorkoutPartTilePause(activity: activity);
+    if (activity.isGroup) return WorkoutPartTileGroup(activity: activity);
+    return WorkoutPartTileActivity(activity: activity, name: name);
   }
 
   Widget timeDot(BuildContext context) {
@@ -175,7 +166,7 @@ class WorkoutPartTile extends StatelessWidget {
             Icons.control_point_duplicate,
             actionTarget: MenuItemActionTarget.PauseAndActivity,
             action: () {
-              add(workoutpart.copy());
+              add(activity.copy());
             },
           ),
           MenuItem(
@@ -183,10 +174,10 @@ class WorkoutPartTile extends StatelessWidget {
             actionTarget: MenuItemActionTarget.PauseAndActivity,
             action: () async {
               final listOfAlarms =
-                  await openAlarmDialog(context, workoutpart.alarms);
+                  await openAlarmDialog(context, activity.alarms);
               if (listOfAlarms != null) {
-                final newPart = workoutpart.copy(alarms: listOfAlarms);
-                update(workoutpart, newPart);
+                final newPart = activity.copy(alarms: listOfAlarms);
+                update(activity, newPart);
               }
             },
           ),
@@ -198,20 +189,16 @@ class WorkoutPartTile extends StatelessWidget {
             Icons.directions_run,
             actionTarget: MenuItemActionTarget.Activity,
             action: () async {
-              final activityProvider =
-                  Provider.of<ActivityProvider>(context, listen: false);
               final choosenActivity = await showSearch(
                 context: context,
-                delegate: ActivitySearch(
-                  mode: ActivitySearchSelectMode.Single,
-                  selected: workoutpart.activityId.isNotEmpty
-                      ? [activityProvider.activityById(workoutpart.activityId)]
-                      : [],
+                delegate: ExerciseSearch(
+                  mode: ExerciseSearchSelectMode.Single,
+                  selected: [],
                 ),
               );
               if (choosenActivity == null) return;
-              final newPart = workoutpart.copy(activityId: choosenActivity.id);
-              update(workoutpart, newPart);
+              final newPart = activity.copy(exerciseId: choosenActivity.id);
+              update(activity, newPart);
             },
           ),
           MenuItem(
@@ -221,12 +208,12 @@ class WorkoutPartTile extends StatelessWidget {
               double newValue = await numberInputDialog(
                 context,
                 'Rounds',
-                workoutpart.rounds.toDouble(),
+                activity.rounds.toDouble(),
                 'rounds',
               );
               if (newValue == null) return;
-              final newPart = workoutpart.copy(rounds: newValue.toInt());
-              update(workoutpart, newPart);
+              final newPart = activity.copy(rounds: newValue.toInt());
+              update(activity, newPart);
             },
           ),
           MenuItem(
@@ -236,12 +223,12 @@ class WorkoutPartTile extends StatelessWidget {
               double newValue = await numberInputDialog(
                 context,
                 'Intervall',
-                workoutpart.intervall.toDouble(),
+                activity.intervall.toDouble(),
                 'sec',
               );
               if (newValue == null) return;
-              final newPart = workoutpart.copy(intervall: newValue.toInt());
-              update(workoutpart, newPart);
+              final newPart = activity.copy(intervall: newValue.toInt());
+              update(activity, newPart);
             },
           ),
           MenuItem(
@@ -251,12 +238,12 @@ class WorkoutPartTile extends StatelessWidget {
               double newValue = await numberInputDialog(
                 context,
                 'Repetition',
-                workoutpart.repetitions.toDouble(),
+                activity.repetitions.toDouble(),
                 'reps',
               );
               if (newValue == null) return;
-              final newPart = workoutpart.copy(repetitions: newValue.toInt());
-              update(workoutpart, newPart);
+              final newPart = activity.copy(repetitions: newValue.toInt());
+              update(activity, newPart);
             },
           ),
           // MenuItem(
@@ -272,16 +259,16 @@ class WorkoutPartTile extends StatelessWidget {
             .where((element) {
               switch (element.actionTarget) {
                 case MenuItemActionTarget.Activity:
-                  return !workoutpart.isGroup && !workoutpart.isPause;
+                  return !activity.isGroup && !activity.isPause;
                   break;
                 case MenuItemActionTarget.Group:
-                  return workoutpart.isGroup;
+                  return activity.isGroup;
                   break;
                 case MenuItemActionTarget.Pause:
-                  return workoutpart.isPause;
+                  return activity.isPause;
                   break;
                 case MenuItemActionTarget.PauseAndActivity:
-                  return workoutpart.isPause || !workoutpart.isGroup;
+                  return activity.isPause || !activity.isGroup;
                   break;
                 case MenuItemActionTarget.All:
                 default:
@@ -299,33 +286,19 @@ class WorkoutPartTile extends StatelessWidget {
   }
 
   void onTab(BuildContext context) async {
-    if (workoutpart.isGroup) {
-      print(workoutpart.rounds);
+    if (activity.isGroup) {
+      print(activity.rounds);
       double newValue = await numberInputDialog(
         context,
         'Rounds',
-        workoutpart.rounds.toDouble(),
+        activity.rounds.toDouble(),
         '',
       );
       if (newValue == null) return;
-      final newPart = workoutpart.copy(rounds: newValue.toInt());
-      update(workoutpart, newPart);
+      final newPart = activity.copy(rounds: newValue.toInt());
+      update(activity, newPart);
       return;
     }
-    tab(workoutpart);
+    tab(activity);
   }
 }
-
-// margin: EdgeInsets.only(
-//       left: 10,
-//     ),
-//     decoration: BoxDecoration(
-//       border: Border.all(
-//         width: 0.5,
-//         color: Theme.of(context).accentColor,
-//       ),
-//       borderRadius: BorderRadius.only(
-//         topLeft: Radius.circular(15),
-//         topRight: Radius.circular(15),
-//       ),
-//     ),

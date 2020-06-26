@@ -7,6 +7,7 @@ class TabEntry {
   final Object data;
 
   final FloatingActionButton actionButton;
+  final FloatingActionButtonLocation actionButtonLocation;
 
   TabEntry({
     this.view,
@@ -14,6 +15,7 @@ class TabEntry {
     this.icon,
     this.data,
     this.actionButton,
+    this.actionButtonLocation = FloatingActionButtonLocation.endFloat,
   });
 
   Widget body() {

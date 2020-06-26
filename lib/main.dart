@@ -1,37 +1,47 @@
-import 'package:fitness_workouts/provider/activity_provider.dart';
-import 'package:fitness_workouts/provider/sound_provider.dart';
-import 'package:fitness_workouts/provider/workout_provider.dart';
-import 'package:fitness_workouts/repositories/json_activity_repository.dart';
-import 'package:fitness_workouts/repositories/json_workout_repository.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:fitness_workouts/blocs/timer/timer_bloc.dart';
+
+import 'package:fitness_workouts/repositories/workouts_repository/firestore_reactive_workout_repository.dart';
+import 'package:fitness_workouts/screens/activity_create_screen.dart';
 import 'package:fitness_workouts/screens/home_screen.dart';
 import 'package:fitness_workouts/screens/workout_create_screen.dart';
 import 'package:fitness_workouts/screens/workout_finish_screen.dart';
-import 'package:fitness_workouts/screens/workout_generate_screen.dart';
+import 'package:fitness_workouts/screens/workout_list_screen.dart';
+import 'package:fitness_workouts/screens/workout_runner_screen.dart';
+import 'package:fitness_workouts/screens/workout_runner_setup_screen.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
-import 'models.dart';
-import 'screens/workout_clock_screen.dart';
+import 'blocs/activities/exercises.dart';
+import 'blocs/sounds/sounds_bloc.dart';
+import 'blocs/workouts/workouts.dart';
+import 'repositories/exercise_repository/firestore_reactive_exercise_repository.dart';
+import 'screens/activity_list_screen.dart';
+import 'screens/timer_screen.dart';
 
 void main() {
+  WidgetsFlutterBinding.ensureInitialized();
   runApp(
-    MultiProvider(
+    MultiBlocProvider(
       providers: [
-        ChangeNotifierProvider(
-          create: (_) => ActivityProvider(repository: JsonActivityRepository())
-            ..loadActivities(),
+        BlocProvider<WorkoutsBloc>(
+          create: (_) => WorkoutsBloc(
+            workoutsRepository:
+                FirestoreReactiveWorkoutRepository(Firestore.instance),
+          )..add(LoadWorkouts()),
         ),
-        ChangeNotifierProvider(
-          create: (_) => WorkoutProvider(repository: JsonWorkoutRepository())
-            ..loadWorkouts(),
+        BlocProvider<ExercisesBloc>(
+          create: (_) => ExercisesBloc(
+            exercisesRepository:
+                FirestoreReactiveExerciseRepository(Firestore.instance),
+          )..add(LoadExercises()),
         ),
-        ChangeNotifierProvider(
-          create: (_) => SoundProvider(sounds: [
-            Sound("Sound 1", "assets/service-bell_daniel_simion.mp3", true),
-            Sound("Sound 2", "assets/service-bell_daniel_simion.mp3", true),
-            Sound("Sound 3", "assets/service-bell_daniel_simion.mp3", true),
-          ]),
+        BlocProvider<SoundsBloc>(
+          create: (_) => SoundsBloc()..add(LoadSounds()),
         ),
+        BlocProvider<TimerBloc>(
+          create: (_) => TimerBloc(),
+        )
       ],
       child: MyApp(),
     ),
@@ -52,10 +62,14 @@ class MyApp extends StatelessWidget {
       home: HomeScreen(),
       routes: {
         HomeScreen.route: (_) => HomeScreen(),
-        WorkoutGenerateScreen.route: (_) => WorkoutGenerateScreen(),
+        TimerScreen.route: (_) => TimerScreen(),
+        ActivityListScreen.route: (_) => ActivityListScreen(),
+        WorkoutRunnerSetupScreen.route: (_) => WorkoutRunnerSetupScreen(),
+        WorkoutListScreen.route: (_) => WorkoutListScreen(),
         WorkoutCreateScreen.route: (_) => WorkoutCreateScreen(),
         WorkoutFinishScreen.route: (_) => WorkoutFinishScreen(),
-        WorkoutClockScreen.route: (_) => WorkoutClockScreen(),
+        WorkoutRunnerScreen.route: (_) => WorkoutRunnerScreen(),
+        ActivityCreateScreen.route: (_) => ActivityCreateScreen(),
       },
     );
   }

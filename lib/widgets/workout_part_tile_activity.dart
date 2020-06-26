@@ -1,12 +1,11 @@
 import 'package:fitness_workouts/models.dart';
-import 'package:fitness_workouts/provider/activity_provider.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 
 class WorkoutPartTileActivity extends StatelessWidget {
-  final WorkoutPart workoutPart;
+  final Activity activity;
+  final String name;
 
-  WorkoutPartTileActivity({this.workoutPart});
+  WorkoutPartTileActivity({this.activity, this.name});
 
   @override
   Widget build(BuildContext context) {
@@ -19,16 +18,11 @@ class WorkoutPartTileActivity extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.center,
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: <Widget>[
-          Selector<ActivityProvider, String>(
-            selector: (_, provider) =>
-                provider.activityById(workoutPart.activityId)?.name ??
-                "Missing Exericse",
-            builder: (_, activityName, __) => SizedBox(
-              width: 100,
-              child: Text(
-                activityName,
-                style: TextStyle(fontSize: 16),
-              ),
+          SizedBox(
+            width: 100,
+            child: Text(
+              name,
+              style: TextStyle(fontSize: 16),
             ),
           ),
           SizedBox(
@@ -40,7 +34,7 @@ class WorkoutPartTileActivity extends StatelessWidget {
                   Icons.access_time,
                   size: 14,
                 ),
-                Text(workoutPart.intervall.toString()),
+                Text(activity.intervall.toString()),
               ],
             ),
           ),
@@ -54,7 +48,7 @@ class WorkoutPartTileActivity extends StatelessWidget {
                   size: 14,
                 ),
                 Text(
-                  workoutPart.repetitions.toString(),
+                  activity.repetitions.toString(),
                   style: TextStyle(fontSize: 14),
                 ),
               ],

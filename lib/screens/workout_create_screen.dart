@@ -1,11 +1,12 @@
-import 'package:fitness_workouts/provider/workout_provider.dart';
-import 'package:fitness_workouts/screens/workout_finish_screen.dart';
+import 'package:fitness_workouts/blocs/workout_create/workout_create_bloc.dart';
+import 'package:fitness_workouts/blocs/workouts/workouts.dart';
 import 'package:fitness_workouts/screens/workout_timeline_view.dart';
-import 'package:fitness_workouts/util/tab_entry.dart';
+import 'package:fitness_workouts/util/dialogs.dart';
+import 'package:fitness_workouts/widgets/workout_action_speed_dial.dart';
+import 'package:fitness_workouts/widgets/workout_create_tabbar.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:provider/provider.dart';
-
-import '../models.dart';
 
 class WorkoutCreateScreen extends StatefulWidget {
   static const String route = '/workout/create';
@@ -14,133 +15,27 @@ class WorkoutCreateScreen extends StatefulWidget {
   _WorkoutCreateScreenState createState() => _WorkoutCreateScreenState();
 }
 
-class _WorkoutCreateScreenState extends State<WorkoutCreateScreen>
-    with SingleTickerProviderStateMixin {
-  TabController _controller;
-
-  @override
-  void initState() {
-    super.initState();
-    _controller =
-        TabController(initialIndex: 0, length: tabs.length, vsync: this);
-
-    _controller.addListener(() {
-      switching(_controller.index);
-    });
-  }
-
-  @override
-  void dispose() {
-    _controller.dispose();
-    super.dispose();
-  }
-
+class _WorkoutCreateScreenState extends State<WorkoutCreateScreen> {
   @override
   Widget build(BuildContext context) {
-    WorkoutProvider workoutProvider = Provider.of<WorkoutProvider>(context);
+    // WorkoutsBloc workoutsBloc = BlocProvider.of<WorkoutsBloc>(context);
+    final workoutId = ModalRoute.of(context).settings.arguments as String;
 
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Workoute Create'),
-        actions: <Widget>[],
-        bottom: TabBar(
-          controller: _controller,
-          tabs: <Tab>[
-            for (final tab in tabs)
-              Tab(
-                text: tab.title,
-              ),
-          ],
-        ),
-      ),
-      body: TabBarView(
-        controller: _controller,
-        children: [
-          for (final tab in tabs)
-            WorkoutTimelineView(
-              sequence: workoutProvider.getSequence(tab.data),
-              updateSequence: workoutProvider.updateWorkoutSequence,
-              copySequence: () => copySequence(workoutProvider),
-            ),
-        ],
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          Navigator.of(context).pushNamed(WorkoutFinishScreen.route);
-        },
-        child: Icon(Icons.navigate_next),
-      ),
-    );
-  }
-
-  void switching(index) {
-    final workoutProvider =
-        Provider.of<WorkoutProvider>(context, listen: false);
-    workoutProvider.selectLevel(tabs[index].data);
-  }
-
-  void copySequence(WorkoutProvider workoutProvider) {
-    switch (workoutProvider.level) {
-      case WorkoutLevel.Beginner:
-        final advanced = workoutProvider.getSequence(WorkoutLevel.Advanced);
-        if (advanced.isNotEmpty) {
-          workoutProvider.copyFrom(WorkoutLevel.Advanced);
-          return;
-        }
-        final professional =
-            workoutProvider.getSequence(WorkoutLevel.Professional);
-        if (professional.isNotEmpty)
-          workoutProvider.copyFrom(WorkoutLevel.Professional);
-        break;
-      case WorkoutLevel.Advanced:
-        final beginner = workoutProvider.getSequence(WorkoutLevel.Beginner);
-        if (beginner.isNotEmpty) {
-          workoutProvider.copyFrom(WorkoutLevel.Beginner);
-          return;
-        }
-        final professional =
-            workoutProvider.getSequence(WorkoutLevel.Professional);
-        if (professional.isNotEmpty)
-          workoutProvider.copyFrom(WorkoutLevel.Professional);
-        break;
-      case WorkoutLevel.Professional:
-        final advanced = workoutProvider.getSequence(WorkoutLevel.Advanced);
-        if (advanced.isNotEmpty) {
-          workoutProvider.copyFrom(WorkoutLevel.Advanced);
-          return;
-        }
-        final beginner = workoutProvider.getSequence(WorkoutLevel.Beginner);
-        if (beginner.isNotEmpty) {
-          workoutProvider.copyFrom(WorkoutLevel.Beginner);
-          return;
-        }
-        break;
-    }
-  }
-
-  List<TabEntry> get tabs {
-    return [
-      TabEntry(
-        title: 'Beginner',
-        data: WorkoutLevel.Beginner,
-        icon: Icon(
-          Icons.directions_run,
-        ),
-      ),
-      TabEntry(
-        title: 'Advanced',
-        data: WorkoutLevel.Advanced,
-        icon: Icon(
-          Icons.home,
-        ),
-      ),
-      TabEntry(
-        title: 'Professional',
-        data: WorkoutLevel.Professional,
-        icon: Icon(
-          Icons.directions_run,
-        ),
-      ),
-    ];
+    return BlocProvider(
+        create: (_) => WorkoutCreateBloc(
+              workoutsBloc: Provider.of<WorkoutsBloc>(context),
+            )..add(InitializeWorkout(workoutId: workoutId)),
+        child: WillPopScope(
+          onWillPop: () async {
+            bool leave = await confirmationDialog(context, "Are u sure?!?!",
+                "If u leave now, you will lose all changes!");
+            return Future.value(leave);
+          },
+          child: Scaffold(
+            appBar: WorkoutCreateTabbar(),
+            body: WorkoutTimelineView(),
+            floatingActionButton: WorkoutActionSpeedDial(),
+          ),
+        ));
   }
 }

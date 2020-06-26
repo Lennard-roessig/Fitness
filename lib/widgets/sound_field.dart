@@ -1,8 +1,8 @@
+import 'package:fitness_workouts/blocs/sounds/sounds_bloc.dart';
 import 'package:fitness_workouts/models.dart';
-import 'package:fitness_workouts/provider/sound_provider.dart';
 import 'package:fitness_workouts/widgets/styled_alert_dialog.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class SoundField extends StatefulWidget {
   final Sound initialSound;
@@ -68,25 +68,30 @@ class _SoundFieldState extends State<SoundField> {
           content: Container(
             width: 250,
             height: 350,
-            child: Consumer<SoundProvider>(
-              builder: (_, provider, __) => ListView.builder(
-                itemCount: provider.sounds.length,
+            child: BlocBuilder<SoundsBloc, SoundsState>(builder: (c, state) {
+              if (state is SoundsLoading) {
+                return CircularProgressIndicator();
+              }
+
+              final loadedState = (state as SoundsLoaded);
+              return ListView.builder(
+                itemCount: loadedState.sounds.length,
                 itemBuilder: (_, index) => GestureDetector(
                   onTap: () => setState(() {
-                    selected = provider.sounds[index];
+                    selected = loadedState.sounds[index];
                   }),
                   child: ListTile(
-                    title: Text(provider.sounds[index].name),
+                    title: Text(loadedState.sounds[index].name),
                     trailing: Icon(
                       Icons.done,
-                      color: selected == provider.sounds[index]
+                      color: selected == loadedState.sounds[index]
                           ? Theme.of(context).accentColor
                           : Theme.of(context).primaryColor,
                     ),
                   ),
                 ),
-              ),
-            ),
+              );
+            }),
           ),
           onCancel: () => Navigator.of(context).pop(initial),
           onFinish: () => Navigator.of(context).pop(selected),

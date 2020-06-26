@@ -1,14 +1,11 @@
-import 'package:fitness_workouts/provider/activity_provider.dart';
-import 'package:fitness_workouts/provider/workout_provider.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 
 import '../models.dart';
 
 class WorkoutPartTileGroup extends StatelessWidget {
-  final WorkoutPart workoutPart;
+  final Activity activity;
 
-  WorkoutPartTileGroup({this.workoutPart});
+  WorkoutPartTileGroup({this.activity});
 
   @override
   Widget build(BuildContext context) {
@@ -30,7 +27,7 @@ class WorkoutPartTileGroup extends StatelessWidget {
               ),
               SizedBox(width: 8),
               Text(
-                '${workoutPart.rounds} Rounds',
+                '${activity.rounds} Rounds',
                 style: TextStyle(fontSize: 16),
               ),
             ],
@@ -40,14 +37,13 @@ class WorkoutPartTileGroup extends StatelessWidget {
     );
   }
 
-  Widget renderGroupMember(
-      ActivityProvider activityProvider, WorkoutPart member, bool isLast) {
+  Widget renderGroupMember(Activity member, bool isLast) {
     String text = isLast ? "" : "-> ";
     if (member.isPause)
       text = 'Pause $text';
     else
-      text =
-          '${activityProvider.activityById(member.activityId)?.name ?? ""} $text';
+      text = "";
+    //'${ActivityStreamProvider.activityById(member.activityId)?.name ?? ""} $text';
 
     return Text(
       text,

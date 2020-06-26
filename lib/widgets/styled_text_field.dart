@@ -5,9 +5,11 @@ class StyledTextField extends StatelessWidget {
   final bool expands;
   final Function(String val) onChange;
   final int maxLines;
+  final String initialValue;
 
   const StyledTextField({
     Key key,
+    this.initialValue = "",
     this.suffix,
     this.expands = true,
     this.onChange,
@@ -17,6 +19,7 @@ class StyledTextField extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return TextField(
+      controller: TextEditingController()..text = this.initialValue,
       expands: expands,
       decoration: InputDecoration(
         filled: true,

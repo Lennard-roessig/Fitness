@@ -1,115 +1,150 @@
 import 'dart:collection';
 import 'dart:math';
 
+import 'package:flutter/cupertino.dart';
 import 'package:uuid/uuid.dart';
 
-import 'model/alarm_value.dart';
-import 'model/workout_entity.dart';
-import 'model/activity_entity.dart';
-import 'model/mutation_value.dart';
-import 'model/sound_value.dart';
-import 'model/workout_part_value.dart';
+import 'repositories/exercise_repository/exercise_entity.dart';
+import 'repositories/workouts_repository/activity_value.dart';
+import 'repositories/workouts_repository/alarm_value.dart';
+import 'repositories/workouts_repository/mutation_value.dart';
+import 'repositories/workouts_repository/sound_value.dart';
+import 'repositories/workouts_repository/workout_entity.dart';
 
-class Activity {
+class Exercise {
   final String id;
   final String name;
-  final String description;
+
+  final String muscleGroup;
+  final List<String> primaryMuscles;
+  final List<String> synergistMuscles;
+  final List<String> dynamicStabilizerMuscles;
+  final List<String> stabilizerMuscles;
+
+  final String force;
+  final String mechanic;
+  final String utility;
+
+  final String descriptionPreperation;
+  final String descriptionExecution;
+
+  final List<String> equipment;
+
   // Detailed information about the exercise
   final String detailVideoUrl;
   // max 3sec. video only one Repetition (without tone, etc..)
   final String repetitionVideoUrl;
-  final ExerciseDifficulty difficulty;
-  final List<ExerciseMuscleTarget> primary;
-  final List<ExerciseMuscleTarget> supporting;
-  final List<Equipment> equipment;
 
-  // for search selection
-  final bool selected;
-
-  Activity(
+  Exercise(
     this.id,
     this.name,
-    this.description,
+    this.muscleGroup,
+    this.primaryMuscles,
+    this.synergistMuscles,
+    this.dynamicStabilizerMuscles,
+    this.stabilizerMuscles,
+    this.force,
+    this.mechanic,
+    this.utility,
+    this.descriptionPreperation,
+    this.descriptionExecution,
+    this.equipment,
     this.detailVideoUrl,
     this.repetitionVideoUrl,
-    this.difficulty,
-    this.primary,
-    this.supporting,
-    this.equipment, {
-    this.selected = false,
-  });
+  );
 
-  @override
-  String toString() {
-    return 'Activity{id: $id, name: $name, description: $description, detailVideoUrl: $detailVideoUrl, repetitionVideoUrl: $repetitionVideoUrl, difficulty: $difficulty, primary: $primary, supporting: $supporting, equipment: $equipment}';
-  }
+  Exercise.empty({
+    String id,
+    @required this.name,
+    @required this.muscleGroup,
+    this.primaryMuscles = const [],
+    this.synergistMuscles = const [],
+    this.dynamicStabilizerMuscles = const [],
+    this.stabilizerMuscles = const [],
+    this.force = "",
+    this.mechanic = "",
+    this.utility = "",
+    @required this.descriptionPreperation,
+    @required this.descriptionExecution,
+    @required this.equipment,
+    this.detailVideoUrl = "",
+    this.repetitionVideoUrl = "",
+  })  : this.id = id ?? Uuid().v4(),
+        assert(name != null && name.isNotEmpty);
 
-  @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      other is ActivityEntity &&
-          runtimeType == other.runtimeType &&
-          id == other.id &&
-          name == other.name &&
-          description == other.description &&
-          detailVideoUrl == other.detailVideoUrl &&
-          repetitionVideoUrl == other.repetitionVideoUrl &&
-          difficulty == other.difficulty &&
-          primary == other.primary &&
-          supporting == other.supporting &&
-          equipment == other.equipment;
-
-  ActivityEntity toEntity() {
-    return ActivityEntity(
+  ExerciseEntity toEntity() {
+    return ExerciseEntity(
       this.id,
       this.name,
-      this.description,
+      this.muscleGroup,
+      this.primaryMuscles,
+      this.synergistMuscles,
+      this.dynamicStabilizerMuscles,
+      this.stabilizerMuscles,
+      this.force,
+      this.mechanic,
+      this.utility,
+      this.descriptionPreperation,
+      this.descriptionExecution,
+      this.equipment,
       this.detailVideoUrl,
       this.repetitionVideoUrl,
-      this.difficulty,
-      this.primary,
-      this.supporting,
-      this.equipment,
     );
   }
 
-  static Activity fromEntity(ActivityEntity entity) {
-    return Activity(
+  static Exercise fromEntity(ExerciseEntity entity) {
+    return Exercise(
       entity.id,
       entity.name,
-      entity.description,
+      entity.muscleGroup,
+      entity.primaryMuscles,
+      entity.synergistMuscles,
+      entity.dynamicStabilizerMuscles,
+      entity.stabilizerMuscles,
+      entity.force,
+      entity.mechanic,
+      entity.utility,
+      entity.descriptionPreperation,
+      entity.descriptionExecution,
+      entity.equipment,
       entity.detailVideoUrl,
       entity.repetitionVideoUrl,
-      entity.difficulty,
-      entity.primary,
-      entity.supporting,
-      entity.equipment,
     );
   }
 
-  Activity copy({
+  Exercise copy({
     String id,
     String name,
-    String description,
+    String muscleGroup,
+    List<String> primaryMuscles,
+    List<String> synergistMuscles,
+    List<String> dynamicStabilizerMuscles,
+    List<String> stabilizerMuscles,
+    String force,
+    String mechanic,
+    String utility,
+    String descriptionPreperation,
+    String descriptionExecution,
+    List<String> equipment,
     String detailVideoUrl,
     String repetitionVideoUrl,
-    ExerciseDifficulty difficulty,
-    List<ExerciseMuscleTarget> primary,
-    List<ExerciseMuscleTarget> supporting,
-    List<Equipment> equipment,
-    bool selected,
   }) {
-    return Activity(
+    return Exercise(
       id ?? this.id,
       name ?? this.name,
-      description ?? this.description,
+      muscleGroup ?? this.muscleGroup,
+      primaryMuscles ?? this.primaryMuscles,
+      synergistMuscles ?? this.synergistMuscles,
+      dynamicStabilizerMuscles ?? this.dynamicStabilizerMuscles,
+      stabilizerMuscles ?? this.stabilizerMuscles,
+      force ?? this.force,
+      mechanic ?? this.mechanic,
+      utility ?? this.utility,
+      descriptionPreperation ?? this.descriptionPreperation,
+      descriptionExecution ?? this.descriptionExecution,
+      equipment ?? this.equipment,
       detailVideoUrl ?? this.detailVideoUrl,
       repetitionVideoUrl ?? this.repetitionVideoUrl,
-      difficulty ?? this.difficulty,
-      primary ?? this.primary,
-      supporting ?? this.supporting,
-      equipment ?? this.equipment,
-      selected: selected ?? this.selected,
     );
   }
 }
@@ -121,7 +156,7 @@ class Workout {
   final String name;
   final String description;
   final int sets;
-  final Map<WorkoutLevel, List<WorkoutPart>> _sequences;
+  final Map<WorkoutLevel, List<Activity>> _sequences;
 
   Workout(
     this.id,
@@ -131,18 +166,24 @@ class Workout {
     this._sequences,
   );
 
-  Workout.empty(
-    this.id, {
+  Workout.empty({
+    this.id,
     this.name = "",
     this.description = "",
     this.sets = 0,
-    Map<WorkoutLevel, List<WorkoutPart>> sequence,
-  }) : _sequences = sequence ?? HashMap();
-  // HashMap.from({
-  //   WorkoutLevel.Beginner: (const [] as List<WorkoutPart>),
-  //   // WorkoutLevel.Advanced: const [] as List<WorkoutPart>,
-  //   // WorkoutLevel.Professional: const [] as List<WorkoutPart>,
-  // });
+    Map<WorkoutLevel, List<Activity>> sequence,
+  }) : _sequences = sequence != null
+            ? HashMap.from({
+                WorkoutLevel.Beginner: List<Activity>(),
+                WorkoutLevel.Advanced: List<Activity>(),
+                WorkoutLevel.Professional: List<Activity>(),
+                ...sequence
+              })
+            : HashMap.from({
+                WorkoutLevel.Beginner: List<Activity>(),
+                WorkoutLevel.Advanced: List<Activity>(),
+                WorkoutLevel.Professional: List<Activity>(),
+              });
 
   @override
   bool operator ==(Object other) =>
@@ -173,14 +214,12 @@ class Workout {
 
   static Workout fromEntity(WorkoutEntity entity) {
     final map = {
-      WorkoutLevel.Beginner: entity.beginnerSequence
-          .map((e) => WorkoutPart.fromEntity(e))
-          .toList(),
-      WorkoutLevel.Advanced: entity.advancedSequence
-          .map((e) => WorkoutPart.fromEntity(e))
-          .toList(),
+      WorkoutLevel.Beginner:
+          entity.beginnerSequence.map((e) => Activity.fromEntity(e)).toList(),
+      WorkoutLevel.Advanced:
+          entity.advancedSequence.map((e) => Activity.fromEntity(e)).toList(),
       WorkoutLevel.Professional: entity.professionalSequence
-          .map((e) => WorkoutPart.fromEntity(e))
+          .map((e) => Activity.fromEntity(e))
           .toList(),
     };
 
@@ -198,7 +237,7 @@ class Workout {
     String name,
     String description,
     int sets,
-    Map<WorkoutLevel, List<WorkoutPart>> sequence,
+    Map<WorkoutLevel, List<Activity>> sequence,
   }) {
     return Workout(
       id ?? this.id,
@@ -209,15 +248,15 @@ class Workout {
     );
   }
 
-  UnmodifiableListView<WorkoutPart> sequence(WorkoutLevel level) =>
+  UnmodifiableListView<Activity> sequence(WorkoutLevel level) =>
       UnmodifiableListView(
           _sequences.containsKey(level) ? _sequences[level] : const []);
 
-  UnmodifiableMapView<WorkoutLevel, List<WorkoutPart>> get sequenceMap =>
+  UnmodifiableMapView<WorkoutLevel, List<Activity>> get sequenceMap =>
       UnmodifiableMapView(_sequences);
 }
 
-class WorkoutPart {
+class Activity {
   final int index;
   final int repetitions;
   final int intervall;
@@ -232,9 +271,9 @@ class WorkoutPart {
   final bool isGroup;
   final int rounds;
   final bool isPause;
-  final String activityId;
+  final String exerciseId;
 
-  WorkoutPart(
+  Activity(
     this.index,
     this.repetitions,
     this.intervall,
@@ -245,14 +284,14 @@ class WorkoutPart {
     this.isGroup,
     this.rounds,
     this.isPause,
-    this.activityId,
+    this.exerciseId,
     this._target,
     this.resistanceType,
     this.resistanceWeight,
     this.relativeResistanceWeight,
   );
 
-  WorkoutPart.empty({
+  Activity.empty({
     this.index = 0,
     this.repetitions = 0,
     this.intervall = 0,
@@ -263,7 +302,7 @@ class WorkoutPart {
     this.isGroup = false,
     this.rounds = 0,
     this.isPause = false,
-    this.activityId = "",
+    this.exerciseId = "",
     final List<ExerciseTarget> target,
     this.resistanceType,
     this.resistanceWeight = 0,
@@ -272,7 +311,7 @@ class WorkoutPart {
         this._alarms = alarms,
         this._target = target;
 
-  WorkoutPart.pause({
+  Activity.pause({
     this.index = 0,
     this.repetitions = 0,
     this.intervall = 0,
@@ -283,7 +322,7 @@ class WorkoutPart {
     this.isGroup = false,
     this.rounds = 0,
     this.isPause = true,
-    this.activityId = "",
+    this.exerciseId = "",
     final List<ExerciseTarget> target,
     this.resistanceType,
     this.resistanceWeight = 0,
@@ -292,7 +331,7 @@ class WorkoutPart {
         this._alarms = alarms,
         this._target = target;
 
-  WorkoutPart.group({
+  Activity.group({
     this.index = 0,
     this.repetitions = 0,
     this.intervall = 0,
@@ -303,7 +342,7 @@ class WorkoutPart {
     this.isGroup = true,
     this.rounds = 1,
     this.isPause = false,
-    this.activityId = "",
+    this.exerciseId = "",
     final List<ExerciseTarget> target,
     this.resistanceType,
     this.resistanceWeight = 0,
@@ -313,8 +352,8 @@ class WorkoutPart {
         this._target = target,
         this.referenceGroupId = referenceGroupId ?? Uuid().v4();
 
-  WorkoutPartValue toEntity() {
-    return WorkoutPartValue(
+  ActivityValue toEntity() {
+    return ActivityValue(
       this.index,
       this.repetitions,
       this.intervall,
@@ -325,7 +364,7 @@ class WorkoutPart {
       this.isGroup,
       this.rounds,
       this.isPause,
-      this.activityId,
+      this.exerciseId,
       this._target,
       this.resistanceType,
       this.resistanceWeight,
@@ -333,8 +372,8 @@ class WorkoutPart {
     );
   }
 
-  static WorkoutPart fromEntity(WorkoutPartValue entity) {
-    return WorkoutPart(
+  static Activity fromEntity(ActivityValue entity) {
+    return Activity(
       entity.index,
       entity.repetitions,
       entity.intervall,
@@ -345,7 +384,7 @@ class WorkoutPart {
       entity.isGroup,
       entity.rounds,
       entity.isPause,
-      entity.activityId,
+      entity.exerciseId,
       entity.target,
       entity.resistanceType,
       entity.resistanceWeight,
@@ -353,7 +392,7 @@ class WorkoutPart {
     );
   }
 
-  WorkoutPart copy({
+  Activity copy({
     int index,
     int repetitions,
     int intervall,
@@ -368,9 +407,9 @@ class WorkoutPart {
     bool isGroup,
     int rounds,
     bool isPause,
-    String activityId,
+    String exerciseId,
   }) {
-    return WorkoutPart(
+    return Activity(
       index ?? this.index,
       repetitions ?? this.repetitions,
       intervall ?? this.intervall,
@@ -381,7 +420,7 @@ class WorkoutPart {
       isGroup ?? this.isGroup,
       rounds ?? this.rounds,
       isPause ?? this.isPause,
-      activityId ?? this.activityId,
+      exerciseId ?? this.exerciseId,
       target ?? this._target,
       resistanceType ?? this.resistanceType,
       resistanceWeight ?? this.resistanceWeight,

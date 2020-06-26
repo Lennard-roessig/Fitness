@@ -1,4 +1,3 @@
-import 'package:fitness_workouts/screens/workout_clock_screen.dart';
 import 'package:flutter/material.dart';
 
 class WorkoutTile extends StatelessWidget {

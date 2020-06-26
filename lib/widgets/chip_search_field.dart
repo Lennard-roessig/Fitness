@@ -4,7 +4,7 @@ import '../models.dart';
 import 'activity_search_delegate.dart';
 
 class ChipSearchField extends StatefulWidget {
-  final Function(List<Activity>) onChange;
+  final Function(List<Exercise>) onChange;
 
   const ChipSearchField({Key key, this.onChange}) : super(key: key);
 
@@ -13,7 +13,7 @@ class ChipSearchField extends StatefulWidget {
 }
 
 class _ChipSearchFieldState extends State<ChipSearchField> {
-  List<Activity> selectedFields = [];
+  List<Exercise> selectedFields = [];
 
   @override
   Widget build(BuildContext context) {
@@ -23,10 +23,10 @@ class _ChipSearchFieldState extends State<ChipSearchField> {
           child: GestureDetector(
             onTap: () => showSearch(
               context: context,
-              delegate: ActivitySearch(
+              delegate: ExerciseSearch(
                 toggle: toggle,
                 selected: selectedFields,
-                mode: ActivitySearchSelectMode.Multiple,
+                mode: ExerciseSearchSelectMode.Multiple,
               ),
             ),
             child: Container(
@@ -43,12 +43,12 @@ class _ChipSearchFieldState extends State<ChipSearchField> {
                       runSpacing: 5,
                       children: selectedFields
                           .map(
-                            (activity) => InputChip(
-                              key: ObjectKey(activity),
-                              label: Text(activity.name),
+                            (exercise) => InputChip(
+                              key: ObjectKey(exercise),
+                              label: Text(exercise.name),
                               backgroundColor: Colors.transparent,
                               deleteIconColor: Theme.of(context).accentColor,
-                              onDeleted: () => remove(activity),
+                              onDeleted: () => remove(exercise),
                               materialTapTargetSize:
                                   MaterialTapTargetSize.shrinkWrap,
                             ),
@@ -61,10 +61,10 @@ class _ChipSearchFieldState extends State<ChipSearchField> {
                     icon: Icon(Icons.search),
                     onPressed: () => showSearch(
                       context: context,
-                      delegate: ActivitySearch(
+                      delegate: ExerciseSearch(
                         toggle: toggle,
                         selected: selectedFields,
-                        mode: ActivitySearchSelectMode.Multiple,
+                        mode: ExerciseSearchSelectMode.Multiple,
                       ),
                     ),
                   ),
@@ -77,26 +77,26 @@ class _ChipSearchFieldState extends State<ChipSearchField> {
     );
   }
 
-  bool toggle(Activity activity) {
-    if (selectedFields.contains(activity)) {
-      remove(activity);
+  bool toggle(Exercise exercise) {
+    if (selectedFields.contains(exercise)) {
+      remove(exercise);
       return false;
     }
 
-    add(activity);
+    add(exercise);
     return true;
   }
 
-  void add(Activity activity) {
+  void add(Exercise exercise) {
     setState(() {
-      selectedFields = [...selectedFields, activity];
+      selectedFields = [...selectedFields, exercise];
     });
     widget.onChange(selectedFields);
   }
 
-  void remove(Activity activity) {
+  void remove(Exercise exercise) {
     setState(() {
-      selectedFields.removeWhere((element) => element == activity);
+      selectedFields.removeWhere((element) => element == exercise);
     });
     widget.onChange(selectedFields);
   }

@@ -1,9 +1,10 @@
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:fitness_workouts/model/workout_entity.dart';
-import 'package:fitness_workouts/model/workout_repository.dart';
 import 'package:flutter/services.dart';
+
+import 'workout_entity.dart';
+import 'workout_repository.dart';
 
 class JsonWorkoutRepository extends WorkoutRepository {
   @override

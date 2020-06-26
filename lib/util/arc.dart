@@ -42,58 +42,47 @@ class MyPainter extends CustomPainter {
 
   @override
   void paint(Canvas canvas, Size size) {
-    final innerHeight2 = size.height - 0;
-    final innerWidth2 = size.width - 0;
-    canvas.drawArc(
-      Rect.fromCenter(
-        center: Offset(size.height / 2, size.width / 2),
-        height: innerHeight2,
-        width: innerWidth2,
-      ),
+    final center = Offset(size.height / 2, size.width / 2);
+    drawCircle(
+      canvas,
+      size.height,
       2 * math.pi,
       2 * math.pi,
-      true,
-      Paint()..color = backgroundColor,
+      center,
+      ringDefaultColor,
     );
 
-    final innerHeight1 = size.height - 18;
-    final innerWidth1 = size.width - 18;
-    canvas.drawArc(
-      Rect.fromCenter(
-        center: Offset(size.height / 2, size.width / 2),
-        height: innerHeight1,
-        width: innerWidth1,
-      ),
-      2 * math.pi,
-      2 * math.pi,
-      true,
-      Paint()..color = ringDefaultColor,
-    );
-
-    canvas.drawArc(
-      Rect.fromCenter(
-        center: Offset(size.height / 2, size.width / 2),
-        height: innerHeight1,
-        width: innerWidth1,
-      ),
+    drawCircle(
+      canvas,
+      size.height,
       -math.pi / 2,
       percentage * math.pi,
-      true,
-      Paint()..color = ringColor,
+      center,
+      ringColor,
     );
 
-    final innerHeight = size.height - 38;
-    final innerWidth = size.width - 38;
+    drawCircle(
+      canvas,
+      size.height * 0.85,
+      2 * math.pi,
+      2 * math.pi,
+      center,
+      backgroundColor,
+    );
+  }
+
+  void drawCircle(Canvas canvas, double diameter, double startAngle,
+      double sweepAngle, Offset center, Color color) {
     canvas.drawArc(
       Rect.fromCenter(
-        center: Offset(size.height / 2, size.width / 2),
-        height: innerHeight,
-        width: innerWidth,
+        center: center,
+        height: diameter,
+        width: diameter,
       ),
-      2 * math.pi,
-      2 * math.pi,
+      startAngle,
+      sweepAngle,
       true,
-      Paint()..color = backgroundColor,
+      Paint()..color = color,
     );
   }
 

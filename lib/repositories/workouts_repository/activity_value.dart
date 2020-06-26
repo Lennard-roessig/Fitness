@@ -1,6 +1,5 @@
-import 'package:fitness_workouts/model/mutation_value.dart';
-
 import 'alarm_value.dart';
+import 'mutation_value.dart';
 
 enum ExerciseTarget {
   Endurance,
@@ -8,7 +7,7 @@ enum ExerciseTarget {
 
 enum ResistanceType { None, Dumbell }
 
-class WorkoutPartValue {
+class ActivityValue {
   final int index;
   final int repetitions;
   final int intervall;
@@ -19,13 +18,13 @@ class WorkoutPartValue {
   final bool isGroup;
   final int rounds;
   final bool isPause;
-  final String activityId;
+  final String exerciseId;
   final List<ExerciseTarget> target;
   final ResistanceType resistanceType;
   final double resistanceWeight;
   final bool relativeResistanceWeight;
 
-  WorkoutPartValue(
+  ActivityValue(
     this.index,
     this.repetitions,
     this.intervall,
@@ -36,7 +35,7 @@ class WorkoutPartValue {
     this.isGroup,
     this.rounds,
     this.isPause,
-    this.activityId,
+    this.exerciseId,
     this.target,
     this.resistanceType,
     this.resistanceWeight,
@@ -45,30 +44,39 @@ class WorkoutPartValue {
 
   @override
   String toString() {
-    return 'WorkoutPartEntity{index: $index, repetitions: $repetitions, intervall: $intervall, groupId: $groupId, mutations: $mutations, alarms: $alarms, target: $target, resistanceType: $resistanceType, resistanceWeight: $resistanceWeight, relativeResistanceWeight: $relativeResistanceWeight, referenceGroupId: $referenceGroupId, isGroup: $isGroup, rounds: $rounds, isPause: $isPause, activityId: $activityId}';
+    return 'ActivityValue{index: $index, repetitions: $repetitions, intervall: $intervall, groupId: $groupId, mutations: $mutations, alarms: $alarms, target: $target, resistanceType: $resistanceType, resistanceWeight: $resistanceWeight, relativeResistanceWeight: $relativeResistanceWeight, referenceGroupId: $referenceGroupId, isGroup: $isGroup, rounds: $rounds, isPause: $isPause, exerciseId: $exerciseId}';
   }
 
   Map<String, Object> toJson() {
     return {
       'index': index,
       'repetitions': repetitions,
+      'intervall': intervall ?? 0,
       'groupId': groupId,
-      'mutations': mutations.map((e) => e.toJson()).toList(),
-      'alarms': alarms.map((e) => e.toJson()).toList(),
+      'mutations': mutations?.map((e) => e.toJson())?.toList() ?? [],
+      'alarms': alarms?.map((e) => e.toJson())?.toList() ?? [],
       'referenceGroupId': referenceGroupId,
       'isGroup': isGroup,
       'rounds': rounds,
       'isPause': isPause,
-      'activityId': activityId,
-      'target': target.toString(),
+      'activityId': exerciseId,
+      'target': target?.map((e) => e.toString())?.toList() ?? [],
       'resistanceType': resistanceType.toString(),
       'resistanceWeight': resistanceWeight,
       'relativeResistanceWeight': relativeResistanceWeight,
     };
   }
 
-  static WorkoutPartValue fromJson(Map<String, Object> json) {
-    return WorkoutPartValue(
+  static ActivityValue fromJson(Map<String, Object> json) {
+    var resistanceWeight;
+    try {
+      resistanceWeight = json['resistanceWeight'] as double;
+    } catch (ex) {
+      final toInt = json['resistanceWeight'] as int;
+      resistanceWeight = toInt.toDouble();
+    }
+
+    return ActivityValue(
       json['index'] as int,
       json['repetitions'] as int,
       json['intervall'] as int,
@@ -86,7 +94,7 @@ class WorkoutPartValue {
           .map((e) => getExerciseTargetFromString(e))
           .toList(),
       getResistanceTypeFromString(json['resistanceType']),
-      json['resistanceWeight'] as double,
+      resistanceWeight,
       json['relativeResistanceWeight'] as bool,
     );
   }

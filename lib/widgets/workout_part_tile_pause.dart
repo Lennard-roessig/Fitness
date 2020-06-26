@@ -2,9 +2,9 @@ import 'package:fitness_workouts/models.dart';
 import 'package:flutter/material.dart';
 
 class WorkoutPartTilePause extends StatelessWidget {
-  final WorkoutPart workoutPart;
+  final Activity activity;
 
-  WorkoutPartTilePause({this.workoutPart});
+  WorkoutPartTilePause({this.activity});
 
   @override
   Widget build(BuildContext context) {
@@ -33,7 +33,7 @@ class WorkoutPartTilePause extends StatelessWidget {
                   Icons.access_time,
                   size: 14,
                 ),
-                Text(workoutPart.intervall.toString()),
+                Text(activity.intervall.toString()),
               ],
             ),
           ),

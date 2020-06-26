@@ -1,12 +1,12 @@
-import 'package:fitness_workouts/model/workout_part_value.dart';
+import 'activity_value.dart';
 
 class WorkoutEntity {
   final String id;
   final String name;
   final String description;
-  final List<WorkoutPartValue> beginnerSequence;
-  final List<WorkoutPartValue> advancedSequence;
-  final List<WorkoutPartValue> professionalSequence;
+  final List<ActivityValue> beginnerSequence;
+  final List<ActivityValue> advancedSequence;
+  final List<ActivityValue> professionalSequence;
 
   final int sets;
 
@@ -45,13 +45,13 @@ class WorkoutEntity {
       json['description'] as String,
       json['sets'] as int,
       (json['beginnerSequence'] as List)
-          .map((e) => WorkoutPartValue.fromJson(e))
+          .map((e) => ActivityValue.fromJson(e))
           .toList(),
       (json['advancedSequence'] as List)
-          .map((e) => WorkoutPartValue.fromJson(e))
+          .map((e) => ActivityValue.fromJson(e))
           .toList(),
       (json['professionalSequence'] as List)
-          .map((e) => WorkoutPartValue.fromJson(e))
+          .map((e) => ActivityValue.fromJson(e))
           .toList(),
     );
   }
