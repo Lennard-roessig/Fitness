@@ -37,7 +37,7 @@ class _WorkoutCreateTabbarState extends State<WorkoutCreateTabbar>
   @override
   Widget build(BuildContext context) {
     return AppBar(
-      title: Text('Workoute Create'),
+      title: Text('Workout Edit'),
       actions: <Widget>[
         FlatButton(
           onPressed: () {
