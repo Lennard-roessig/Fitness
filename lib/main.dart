@@ -12,7 +12,7 @@ import 'package:fitness_workouts/screens/workout_runner_setup_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import 'blocs/activities/exercises.dart';
+import 'blocs/exercises/exercises.dart';
 import 'blocs/sounds/sounds_bloc.dart';
 import 'blocs/workouts/workouts.dart';
 import 'repositories/exercise_repository/firestore_reactive_exercise_repository.dart';
@@ -39,9 +39,6 @@ void main() {
         BlocProvider<SoundsBloc>(
           create: (_) => SoundsBloc()..add(LoadSounds()),
         ),
-        BlocProvider<TimerBloc>(
-          create: (_) => TimerBloc(),
-        )
       ],
       child: MyApp(),
     ),
@@ -68,7 +65,12 @@ class MyApp extends StatelessWidget {
         WorkoutListScreen.route: (_) => WorkoutListScreen(),
         WorkoutCreateScreen.route: (_) => WorkoutCreateScreen(),
         WorkoutFinishScreen.route: (_) => WorkoutFinishScreen(),
-        WorkoutRunnerScreen.route: (_) => WorkoutRunnerScreen(),
+        WorkoutRunnerScreen.route: (_) => MultiBlocProvider(
+              providers: [
+                BlocProvider<TimerBloc>(create: (_) => TimerBloc()),
+              ],
+              child: WorkoutRunnerScreen(),
+            ),
         ActivityCreateScreen.route: (_) => ActivityCreateScreen(),
       },
     );

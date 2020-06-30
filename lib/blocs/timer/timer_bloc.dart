@@ -27,13 +27,13 @@ class TimerBloc extends Bloc<TimerEvent, TimerState> {
     if (event is StartTimer) {
       if (timer == null)
         timer = Timer.periodic(duration, (timer) {
-          add(TickTimer(timer.tick + lastTime));
+          add(TickTimer(timer.tick + lastTime, duration.inSeconds));
         });
-      yield TimerRunning(state.seconds, duration.inSeconds * 1.0);
+      yield TimerRunning(state.seconds, 0);
     }
 
     if (event is StopTimer) {
-      lastTime = timer?.tick ?? 0;
+      lastTime = state.seconds;
       timer?.cancel();
       timer = null;
       yield TimerStopped(state.seconds);
@@ -48,11 +48,11 @@ class TimerBloc extends Bloc<TimerEvent, TimerState> {
     if (event is ResetTimer) {
       if (state is TimerStopped) yield TimerStopped(state.seconds);
       if (state is TimerRunning)
-        yield TimerRunning(state.seconds, duration.inSeconds * 1.0);
+        yield TimerRunning(state.seconds, duration.inSeconds);
     }
 
     if (event is TickTimer && state is TimerRunning) {
-      yield TimerRunning(event.seconds, duration.inSeconds * 1.0);
+      yield TimerRunning(event.seconds, event.delay);
     }
   }
 }

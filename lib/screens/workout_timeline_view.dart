@@ -1,4 +1,4 @@
-import 'package:fitness_workouts/blocs/activities/exercises.dart';
+import 'package:fitness_workouts/blocs/exercises/exercises.dart';
 import 'package:fitness_workouts/blocs/workout_create/workout_create_bloc.dart';
 import 'package:fitness_workouts/widgets/workout_part_tile.dart';
 import 'package:flutter/material.dart';

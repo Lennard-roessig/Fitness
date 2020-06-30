@@ -5,6 +5,7 @@ import 'package:equatable/equatable.dart';
 import 'package:fitness_workouts/blocs/workouts/workouts.dart';
 import 'package:fitness_workouts/models.dart';
 import 'package:fitness_workouts/repositories/workouts_repository/reactive_workout_repository.dart';
+import 'package:fitness_workouts/repositories/workouts_repository/workout_repository.dart';
 import 'package:flutter/material.dart';
 
 class WorkoutsBloc extends Bloc<WorkoutsEvent, WorkoutsState> {

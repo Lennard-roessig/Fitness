@@ -1,6 +1,7 @@
 import 'dart:collection';
 import 'dart:math';
 
+import 'package:equatable/equatable.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:uuid/uuid.dart';
 
@@ -513,7 +514,7 @@ class Mutation {
   }
 }
 
-class Sound {
+class Sound extends Equatable {
   final String name;
   final String path;
   final bool local;
@@ -539,4 +540,7 @@ class Sound {
       entity.local,
     );
   }
+
+  @override
+  List<Object> get props => [name, path, local];
 }

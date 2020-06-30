@@ -1,4 +1,4 @@
-import 'package:fitness_workouts/blocs/activities/exercises.dart';
+import 'package:fitness_workouts/blocs/exercises/exercises.dart';
 import 'package:fitness_workouts/blocs/workout_create/workout_create.dart';
 import 'package:fitness_workouts/widgets/chip_search_field.dart';
 import 'package:fitness_workouts/widgets/number_input.dart';

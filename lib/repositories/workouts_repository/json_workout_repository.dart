@@ -14,7 +14,7 @@ class JsonWorkoutRepository extends WorkoutRepository {
     // final json = JsonDecoder().convert(string);
     final string = await loadAsset();
     final jsonReponse = json.decode(string);
-    final workouts = (jsonReponse['workouts'])
+    final workouts = jsonReponse
         .map<WorkoutEntity>((value) => WorkoutEntity.fromJson(value))
         .toList();
     return workouts;
@@ -24,9 +24,9 @@ class JsonWorkoutRepository extends WorkoutRepository {
   Future saveWorkouts(List<WorkoutEntity> workouts) async {
     final file = await _getLocalFile();
 
-    return file.writeAsString(JsonEncoder().convert({
-      'workouts': workouts.map((workout) => workout.toJson()).toList(),
-    }));
+    return file.writeAsString(JsonEncoder().convert(
+      workouts.map((workout) => workout.toJson()).toList(),
+    ));
   }
 
   Future<File> _getLocalFile() async {

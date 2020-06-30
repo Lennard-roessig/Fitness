@@ -2,14 +2,13 @@ part of 'runner_bloc.dart';
 
 abstract class RunnerState extends Equatable {
   final int round;
-
   final int time;
   final Activity activity;
   final int index;
 
   const RunnerState(this.round, this.time, this.activity, this.index);
   @override
-  List<Object> get props => [];
+  List<Object> get props => [round, time, activity, index];
 }
 
 // for activities based on repetitions instead of time
@@ -20,10 +19,6 @@ class RunnerWaiting extends RunnerState {
     Activity activity,
     int index,
   }) : super(round, time, activity, index);
-
-  RunnerWaiting.initial({
-    Activity activity,
-  }) : super(0, 0, activity, 0);
 }
 
 class RunnerRunningAndWaiting extends RunnerState {
@@ -49,5 +44,5 @@ class RunnerFinished extends RunnerState {
     int round,
     int time,
     int index,
-  }) : super(round, time, null, index);
+  }) : super(round, time, Activity.pause(), index);
 }

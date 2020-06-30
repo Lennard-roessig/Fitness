@@ -14,6 +14,10 @@ class ResetTimer extends TimerEvent {}
 
 class TickTimer extends TimerEvent {
   final int seconds;
+  final int delay;
 
-  TickTimer(this.seconds);
+  TickTimer(this.seconds, this.delay);
+
+  @override
+  String toString() => 'TickTimer {seconds $seconds, delay: $delay}';
 }

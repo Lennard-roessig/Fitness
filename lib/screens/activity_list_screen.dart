@@ -1,4 +1,4 @@
-import 'package:fitness_workouts/blocs/activities/exercises.dart';
+import 'package:fitness_workouts/blocs/exercises/exercises.dart';
 import 'package:fitness_workouts/widgets/styled_text_field.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';

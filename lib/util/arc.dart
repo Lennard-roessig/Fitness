@@ -87,5 +87,6 @@ class MyPainter extends CustomPainter {
   }
 
   @override
-  bool shouldRepaint(CustomPainter oldDelegate) => false;
+  bool shouldRepaint(MyPainter oldDelegate) =>
+      oldDelegate.percentage != percentage;
 }
