@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 class StyledAlertDialog extends StatelessWidget {
   final Widget title;
   final Widget content;
+  final Widget actionbar;
   final void Function() onCancel;
   final void Function() onFinish;
 
@@ -12,6 +13,7 @@ class StyledAlertDialog extends StatelessWidget {
     this.content,
     this.onCancel,
     this.onFinish,
+    this.actionbar,
   }) : super();
 
   @override
@@ -35,26 +37,29 @@ class StyledAlertDialog extends StatelessWidget {
               SizedBox(
                 height: 20,
               ),
-            Row(
-              children: <Widget>[
-                Spacer(),
-                if (this.onCancel != null)
-                  InvertedFlatButton(
-                    child: Text('Cancel'),
-                    onPressed: this.onCancel,
-                  ),
-                if (this.onCancel != null && this.onFinish != null)
-                  SizedBox(
-                    width: 10,
-                  ),
-                if (this.onFinish != null)
-                  RaisedButton(
-                    child: Text('Apply'),
-                    onPressed: this.onFinish,
-                    color: Theme.of(context).accentColor,
-                  ),
-              ],
-            ),
+            if (actionbar != null)
+              actionbar
+            else
+              Row(
+                children: <Widget>[
+                  Spacer(),
+                  if (this.onCancel != null)
+                    InvertedFlatButton(
+                      child: Text('Cancel'),
+                      onPressed: this.onCancel,
+                    ),
+                  if (this.onCancel != null && this.onFinish != null)
+                    SizedBox(
+                      width: 10,
+                    ),
+                  if (this.onFinish != null)
+                    RaisedButton(
+                      child: Text('Apply'),
+                      onPressed: this.onFinish,
+                      color: Theme.of(context).accentColor,
+                    ),
+                ],
+              ),
           ],
         ),
       ),

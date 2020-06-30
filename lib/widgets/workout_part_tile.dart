@@ -1,11 +1,13 @@
 import 'package:fitness_workouts/models/activity.dart';
+import 'package:fitness_workouts/models/alarm.dart';
 import 'package:fitness_workouts/screens/workout/workout_timeline_view.dart';
-import 'package:fitness_workouts/util/dialogs.dart';
 import 'package:fitness_workouts/util/time_format.dart';
+import 'package:fitness_workouts/widgets/dialogs/alarm_dialog.dart';
 
 import 'package:flutter/material.dart';
 
 import 'activity_search_delegate.dart';
+import 'dialogs/number_input_dialog.dart';
 import 'menu_icon_button.dart';
 import 'workout_part_tile_group.dart';
 import 'workout_part_tile_pause.dart';
@@ -173,8 +175,13 @@ class WorkoutPartTile extends StatelessWidget {
             Icons.timer,
             actionTarget: MenuItemActionTarget.PauseAndActivity,
             action: () async {
-              final listOfAlarms =
-                  await openAlarmDialog(context, activity.alarms);
+              final listOfAlarms = await showDialog<List<Alarm>>(
+                context: context,
+                builder: (_) => AlarmDialog(
+                  alarms: activity.alarms,
+                ),
+              );
+
               if (listOfAlarms != null) {
                 final newPart = activity.copy(alarms: listOfAlarms);
                 update(activity, newPart);
@@ -205,12 +212,15 @@ class WorkoutPartTile extends StatelessWidget {
             Icons.replay,
             actionTarget: MenuItemActionTarget.Group,
             action: () async {
-              double newValue = await numberInputDialog(
-                context,
-                'Rounds',
-                activity.rounds.toDouble(),
-                'rounds',
+              double newValue = await showDialog<double>(
+                context: context,
+                builder: (_) => NumberInputDialog(
+                  title: 'Rounds',
+                  initialValue: activity.rounds.toDouble(),
+                  suffix: 'rounds',
+                ),
               );
+
               if (newValue == null) return;
               final newPart = activity.copy(rounds: newValue.toInt());
               update(activity, newPart);
@@ -220,12 +230,15 @@ class WorkoutPartTile extends StatelessWidget {
             Icons.access_time,
             actionTarget: MenuItemActionTarget.PauseAndActivity,
             action: () async {
-              double newValue = await numberInputDialog(
-                context,
-                'Intervall',
-                activity.intervall.toDouble(),
-                'sec',
+              double newValue = await showDialog<double>(
+                context: context,
+                builder: (_) => NumberInputDialog(
+                  title: 'Intervall',
+                  initialValue: activity.intervall.toDouble(),
+                  suffix: 'sec',
+                ),
               );
+
               if (newValue == null) return;
               final newPart = activity.copy(intervall: newValue.toInt());
               update(activity, newPart);
@@ -235,11 +248,13 @@ class WorkoutPartTile extends StatelessWidget {
             Icons.repeat,
             actionTarget: MenuItemActionTarget.Activity,
             action: () async {
-              double newValue = await numberInputDialog(
-                context,
-                'Repetition',
-                activity.repetitions.toDouble(),
-                'reps',
+              double newValue = await showDialog<double>(
+                context: context,
+                builder: (_) => NumberInputDialog(
+                  title: 'Repetition',
+                  initialValue: activity.repetitions.toDouble(),
+                  suffix: 'reps',
+                ),
               );
               if (newValue == null) return;
               final newPart = activity.copy(repetitions: newValue.toInt());
@@ -278,13 +293,15 @@ class WorkoutPartTile extends StatelessWidget {
 
   void onTab(BuildContext context) async {
     if (activity.isGroup) {
-      print(activity.rounds);
-      double newValue = await numberInputDialog(
-        context,
-        'Rounds',
-        activity.rounds.toDouble(),
-        '',
+      double newValue = await showDialog<double>(
+        context: context,
+        builder: (context) => NumberInputDialog(
+          title: 'Rounds',
+          initialValue: 0,
+          suffix: '',
+        ),
       );
+
       if (newValue == null) return;
       final newPart = activity.copy(rounds: newValue.toInt());
       update(activity, newPart);

@@ -2,7 +2,7 @@ import 'package:fitness_workouts/blocs/workout_create/workout_create.dart';
 import 'package:fitness_workouts/models/activity.dart';
 import 'package:fitness_workouts/models/exercise.dart';
 import 'package:fitness_workouts/screens/workout/workout_generate_screen.dart';
-import 'package:fitness_workouts/util/dialogs.dart';
+import 'package:fitness_workouts/widgets/dialogs/number_input_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
@@ -67,11 +67,13 @@ class WorkoutActionSpeedDial extends StatelessWidget {
           labelStyle:
               TextStyle(fontSize: 18.0, color: Theme.of(context).primaryColor),
           onTap: () async {
-            double value = await numberInputDialog(
-              context,
-              'Pause Intervall',
-              0,
-              'sec',
+            double value = await showDialog<double>(
+              context: context,
+              builder: (context) => NumberInputDialog(
+                title: 'Pause Intervall',
+                initialValue: 0,
+                suffix: 'sec',
+              ),
             );
             add(Activity.pause(intervall: value.toInt()), workoutCreateBloc);
           }),

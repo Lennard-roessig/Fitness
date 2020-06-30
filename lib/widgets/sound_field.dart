@@ -1,9 +1,7 @@
-import 'package:fitness_workouts/blocs/sounds/sounds_bloc.dart';
 import 'package:fitness_workouts/models/sound.dart';
+import 'package:fitness_workouts/widgets/dialogs/sound_list_dialog.dart';
 
-import 'package:fitness_workouts/widgets/styled_alert_dialog.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 
 class SoundField extends StatefulWidget {
   final Sound initialSound;
@@ -58,46 +56,10 @@ class _SoundFieldState extends State<SoundField> {
   }
 
   Future<Sound> soundList(BuildContext context, Sound initial) {
-    Sound selected = initial;
-
     return showDialog<Sound>(
       context: context,
       barrierDismissible: false,
-      builder: (context) => StatefulBuilder(
-        builder: (context, setState) => StyledAlertDialog(
-          title: Text('Custom Dialog'),
-          content: Container(
-            width: 250,
-            height: 350,
-            child: BlocBuilder<SoundsBloc, SoundsState>(builder: (c, state) {
-              if (state is SoundsLoading) {
-                return CircularProgressIndicator();
-              }
-
-              final loadedState = (state as SoundsLoaded);
-              return ListView.builder(
-                itemCount: loadedState.sounds.length,
-                itemBuilder: (_, index) => GestureDetector(
-                  onTap: () => setState(() {
-                    selected = loadedState.sounds[index];
-                  }),
-                  child: ListTile(
-                    title: Text(loadedState.sounds[index].name),
-                    trailing: Icon(
-                      Icons.done,
-                      color: selected == loadedState.sounds[index]
-                          ? Theme.of(context).accentColor
-                          : Theme.of(context).primaryColor,
-                    ),
-                  ),
-                ),
-              );
-            }),
-          ),
-          onCancel: () => Navigator.of(context).pop(initial),
-          onFinish: () => Navigator.of(context).pop(selected),
-        ),
-      ),
+      builder: (context) => SoundListDialog(initial),
     );
   }
 }
