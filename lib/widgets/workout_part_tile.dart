@@ -1,10 +1,10 @@
+import 'package:fitness_workouts/models/activity.dart';
 import 'package:fitness_workouts/screens/workout_timeline_view.dart';
 import 'package:fitness_workouts/util/dialogs.dart';
 import 'package:fitness_workouts/util/time_format.dart';
 
 import 'package:flutter/material.dart';
 
-import '../models.dart';
 import 'activity_search_delegate.dart';
 import 'menu_icon_button.dart';
 import 'workout_part_tile_group.dart';

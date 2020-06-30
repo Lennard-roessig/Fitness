@@ -4,9 +4,8 @@ import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:fitness_workouts/blocs/sounds/sounds_bloc.dart';
 import 'package:fitness_workouts/blocs/timer/timer_bloc.dart';
+import 'package:fitness_workouts/models/activity.dart';
 import 'package:flutter/material.dart';
-
-import '../../models.dart';
 
 part 'runner_event.dart';
 part 'runner_state.dart';

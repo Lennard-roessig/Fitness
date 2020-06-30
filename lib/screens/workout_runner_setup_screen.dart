@@ -1,10 +1,9 @@
 import 'package:fitness_workouts/blocs/exercises/exercises.dart';
+import 'package:fitness_workouts/models/workout.dart';
 
 import 'package:fitness_workouts/screens/workout_runner_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-
-import '../models.dart';
 
 class WorkoutRunnerSetupScreen extends StatelessWidget {
   static const route = "clock/setup";

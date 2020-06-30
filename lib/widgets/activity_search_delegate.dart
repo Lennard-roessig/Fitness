@@ -1,9 +1,8 @@
 import 'package:fitness_workouts/blocs/exercises/exercises.dart';
+import 'package:fitness_workouts/models/exercise.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-
-import '../models.dart';
 
 enum ExerciseSearchSelectMode { Single, Multiple }
 
@@ -100,19 +99,7 @@ class ExerciseSearch extends SearchDelegate<Exercise> {
                   ),
                 ),
               )
-              .toList()
-          // : [
-          //     ListTile(
-          //       title: FlatButton(
-          //         child: Text('add'),
-          //         onPressed: () {
-          //           Navigator.of(context)
-          //               .pushNamed(ActivityCreateScreen.route);
-          //         },
-          //       ),
-          //     )
-          //   ],
-          );
+              .toList());
     });
   }
 

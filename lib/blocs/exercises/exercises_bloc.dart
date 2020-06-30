@@ -1,10 +1,10 @@
 import 'dart:async';
 
+import 'package:fitness_workouts/models/exercise.dart';
 import 'package:fitness_workouts/repositories/exercise_repository/reactive_exercise_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../models.dart';
 import 'exercises_event.dart';
 import 'exercises_state.dart';
 

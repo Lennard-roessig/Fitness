@@ -1,20 +1,12 @@
+import 'dart:collection';
+
 import 'package:fitness_workouts/blocs/exercises/exercises.dart';
 import 'package:fitness_workouts/blocs/workout_create/workout_create_bloc.dart';
+import 'package:fitness_workouts/models/activity.dart';
 import 'package:fitness_workouts/widgets/workout_part_tile.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../models.dart';
-
-/*
-
-Work on Timeline 
-- switch parts
-- add parts
-- remove parts 
-- create Rounds
-- etc. 
-*/
 class WorkoutTimelineView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -120,7 +112,7 @@ class WorkoutTimelineView extends StatelessWidget {
     );
   }
 
-  int time(Activity part, List<Activity> sequence) {
+  int time(Activity part, UnmodifiableListView<Activity> sequence) {
     assert(part != null);
     int time = 0;
     int lastGroupTime = 0;

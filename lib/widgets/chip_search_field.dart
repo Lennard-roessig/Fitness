@@ -1,6 +1,6 @@
+import 'package:fitness_workouts/models/exercise.dart';
 import 'package:flutter/material.dart';
 
-import '../models.dart';
 import 'activity_search_delegate.dart';
 
 class ChipSearchField extends StatefulWidget {

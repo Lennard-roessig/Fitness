@@ -1,8 +1,6 @@
 import 'package:fitness_workouts/widgets/styled_text_field.dart';
 import 'package:flutter/material.dart';
 
-import '../models.dart';
-
 class ActivityCreateScreen extends StatelessWidget {
   static const route = '/activity/create';
 

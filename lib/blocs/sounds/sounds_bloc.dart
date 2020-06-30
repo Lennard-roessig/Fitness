@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
-import 'package:fitness_workouts/models.dart';
+import 'package:fitness_workouts/models/sound.dart';
 import 'package:fitness_workouts/util/sound_player.dart';
 
 part 'sounds_event.dart';

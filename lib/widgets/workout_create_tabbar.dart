@@ -1,10 +1,9 @@
 import 'package:fitness_workouts/blocs/workout_create/workout_create.dart';
+import 'package:fitness_workouts/models/workout.dart';
 import 'package:fitness_workouts/screens/workout_finish_screen.dart';
 import 'package:fitness_workouts/util/tab_entry.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-
-import '../models.dart';
 
 class WorkoutCreateTabbar extends StatefulWidget
     implements PreferredSizeWidget {

@@ -1,4 +1,5 @@
-import 'package:fitness_workouts/models.dart';
+import 'package:fitness_workouts/models/alarm.dart';
+import 'package:fitness_workouts/models/sound.dart';
 import 'package:fitness_workouts/widgets/number_input.dart';
 import 'package:fitness_workouts/widgets/styled_alert_dialog.dart';
 import 'package:flushbar/flushbar.dart';
@@ -40,39 +41,6 @@ Future<double> numberInputDialog(
     ),
   );
 }
-
-//  Column(
-//               mainAxisSize: MainAxisSize.min,
-//               children: <Widget>[
-//                 Text('Predefined Pauses (sec)'),
-//                 SizedBox(height: 10),
-//                 Wrap(
-//                   alignment: WrapAlignment.spaceAround,
-//                   runSpacing: 10,
-//                   direction: Axis.horizontal,
-//                   spacing: 10,
-//                   children: [5, 10, 20, 30, 45, 60]
-//                       .map(
-//                         (e) => InkWell(
-//                           onTap: () {
-//                             final pause = WorkoutPart.pause();
-//                             Navigator.of(context).pop(pause.copy(intervall: e));
-//                           },
-//                           child: Container(
-//                             width: 30,
-//                             height: 30,
-//                             decoration: BoxDecoration(
-//                               borderRadius: BorderRadius.circular(15),
-//                               color: Theme.of(context).accentColor,
-//                             ),
-//                             child: Center(child: Text('$e')),
-//                           ),
-//                         ),
-//                       )
-//                       .toList(),
-//                 ),
-//               ],
-//             ),
 
 Future<bool> confirmationDialog(
     BuildContext context, String title, String content) {

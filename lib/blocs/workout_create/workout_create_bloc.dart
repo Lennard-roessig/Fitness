@@ -4,7 +4,9 @@ import 'dart:collection';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:fitness_workouts/blocs/workouts/workouts.dart';
-import 'package:fitness_workouts/models.dart';
+import 'package:fitness_workouts/models/activity.dart';
+import 'package:fitness_workouts/models/exercise.dart';
+import 'package:fitness_workouts/models/workout.dart';
 import 'package:flutter/material.dart';
 
 part 'workout_create_event.dart';

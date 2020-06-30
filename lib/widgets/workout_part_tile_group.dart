@@ -1,6 +1,5 @@
+import 'package:fitness_workouts/models/activity.dart';
 import 'package:flutter/material.dart';
-
-import '../models.dart';
 
 class WorkoutPartTileGroup extends StatelessWidget {
   final Activity activity;

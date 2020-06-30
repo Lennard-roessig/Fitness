@@ -1,5 +1,6 @@
 import 'package:fitness_workouts/blocs/sounds/sounds_bloc.dart';
-import 'package:fitness_workouts/models.dart';
+import 'package:fitness_workouts/models/sound.dart';
+
 import 'package:fitness_workouts/widgets/styled_alert_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';

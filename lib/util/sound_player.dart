@@ -1,8 +1,7 @@
+import 'package:fitness_workouts/models/sound.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_tts/flutter_tts.dart';
 import 'package:soundpool/soundpool.dart';
-
-import '../models.dart';
 
 enum TtsState { playing, stopped }
 

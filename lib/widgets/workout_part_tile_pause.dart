@@ -1,4 +1,4 @@
-import 'package:fitness_workouts/models.dart';
+import 'package:fitness_workouts/models/activity.dart';
 import 'package:flutter/material.dart';
 
 class WorkoutPartTilePause extends StatelessWidget {

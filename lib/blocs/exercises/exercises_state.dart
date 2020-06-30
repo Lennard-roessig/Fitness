@@ -1,6 +1,5 @@
 import 'package:equatable/equatable.dart';
-
-import '../../models.dart';
+import 'package:fitness_workouts/models/exercise.dart';
 
 abstract class ExercisesState extends Equatable {
   const ExercisesState();

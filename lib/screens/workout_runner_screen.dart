@@ -2,7 +2,10 @@ import 'package:fitness_workouts/blocs/exercises/exercises.dart';
 import 'package:fitness_workouts/blocs/runner/runner_bloc.dart';
 import 'package:fitness_workouts/blocs/sounds/sounds_bloc.dart';
 import 'package:fitness_workouts/blocs/timer/timer_bloc.dart';
-import 'package:fitness_workouts/models.dart';
+import 'package:fitness_workouts/models/activity.dart';
+import 'package:fitness_workouts/models/sound.dart';
+import 'package:fitness_workouts/models/workout.dart';
+
 import 'package:fitness_workouts/util/arc.dart';
 import 'package:fitness_workouts/util/time_format.dart';
 import 'package:flutter/material.dart';

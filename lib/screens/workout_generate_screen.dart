@@ -1,12 +1,11 @@
 import 'package:fitness_workouts/blocs/exercises/exercises.dart';
 import 'package:fitness_workouts/blocs/workout_create/workout_create.dart';
+import 'package:fitness_workouts/models/exercise.dart';
 import 'package:fitness_workouts/widgets/chip_search_field.dart';
 import 'package:fitness_workouts/widgets/number_input.dart';
 import 'package:fitness_workouts/widgets/switch_input.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-
-import '../models.dart';
 
 class WorkoutGenerateScreen extends StatelessWidget {
   final Function(List<Exercise> exercises, int pause, int rounds,
