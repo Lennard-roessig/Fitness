@@ -37,9 +37,12 @@ class StyledAlertDialog extends StatelessWidget {
               SizedBox(
                 height: 20,
               ),
-            if (actionbar != null)
+            if (actionbar != null) ...[
+              SizedBox(
+                height: 30,
+              ),
               actionbar
-            else
+            ] else
               Row(
                 children: <Widget>[
                   Spacer(),

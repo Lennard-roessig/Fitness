@@ -1,4 +1,5 @@
 import 'package:fitness_workouts/widgets/dialogs/styled_alert_dialog.dart';
+import 'package:fitness_workouts/widgets/inputs/inverted_flat_button.dart';
 import 'package:flutter/material.dart';
 
 class ConfirmationDialog extends StatelessWidget {
@@ -16,14 +17,23 @@ class ConfirmationDialog extends StatelessWidget {
       actionbar: Row(
         mainAxisAlignment: MainAxisAlignment.end,
         children: <Widget>[
-          RaisedButton(
+          InvertedFlatButton(
             child: Text('Cancel'),
             onPressed: () => Navigator.of(context).pop(false),
           ),
+          SizedBox(
+            width: 10,
+          ),
           RaisedButton(
-            child: Text('Ok'),
+            child: Text(
+              'Leave',
+              style: TextStyle(
+                color: Theme.of(context).primaryColor,
+              ),
+            ),
             onPressed: () => Navigator.of(context).pop(true),
-          )
+            color: Theme.of(context).accentColor,
+          ),
         ],
       ),
     );

@@ -24,11 +24,12 @@ class WorkoutCreateScreen extends StatelessWidget {
           bool leave = await showDialog<bool>(
             context: context,
             builder: (context) => ConfirmationDialog(
-              title: "Are u sure?!?!",
-              content: "If u leave now, you will lose all changes!",
+              title: "Sure you wanna leave?",
+              content: "If you leave, all Progress gets lost",
             ),
           );
-          return Future.value(leave);
+
+          return Future.value(leave ?? false);
         },
         child: Scaffold(
           appBar: WorkoutCreateTabbar(),
