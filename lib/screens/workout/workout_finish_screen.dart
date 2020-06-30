@@ -1,22 +1,20 @@
 import 'package:fitness_workouts/blocs/workout_create/workout_create.dart';
 import 'package:fitness_workouts/widgets/styled_text_field.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:provider/provider.dart';
 
 class WorkoutFinishScreen extends StatelessWidget {
-  static const String route = '/workout/finish';
+  final SetInformation information;
 
   String name;
   String description;
 
-  @override
-  Widget build(BuildContext context) {
-    final information =
-        ModalRoute.of(context).settings.arguments as SetInformation;
-
+  WorkoutFinishScreen({Key key, this.information}) : super(key: key) {
     name = information.name ?? "";
     description = information.description ?? "";
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text('Finish Workout'),

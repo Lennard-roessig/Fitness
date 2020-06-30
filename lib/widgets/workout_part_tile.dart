@@ -1,5 +1,5 @@
 import 'package:fitness_workouts/models/activity.dart';
-import 'package:fitness_workouts/screens/workout_timeline_view.dart';
+import 'package:fitness_workouts/screens/workout/workout_timeline_view.dart';
 import 'package:fitness_workouts/util/dialogs.dart';
 import 'package:fitness_workouts/util/time_format.dart';
 
@@ -246,15 +246,6 @@ class WorkoutPartTile extends StatelessWidget {
               update(activity, newPart);
             },
           ),
-          // MenuItem(
-          //   Icons.delete_outline,
-          //   actionTarget: MenuItemActionTarget.All,
-          //   action: () async {
-          //     bool confirmed = await confirmationDialog(
-          //         context, 'Delete?', 'You want permantly delete this part?');
-          //     if (confirmed != null && confirmed) delete(workoutpart);
-          //   },
-          // ),
         ]
             .where((element) {
               switch (element.actionTarget) {

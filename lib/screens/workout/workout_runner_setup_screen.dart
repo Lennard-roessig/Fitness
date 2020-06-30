@@ -1,16 +1,17 @@
 import 'package:fitness_workouts/blocs/exercises/exercises.dart';
 import 'package:fitness_workouts/models/workout.dart';
+import 'package:fitness_workouts/screens/workout/workout_runner_screen.dart';
 
-import 'package:fitness_workouts/screens/workout_runner_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class WorkoutRunnerSetupScreen extends StatelessWidget {
-  static const route = "clock/setup";
+  final Workout workout;
+
+  const WorkoutRunnerSetupScreen({Key key, this.workout}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    Workout workout = ModalRoute.of(context).settings.arguments as Workout;
     return Scaffold(
       appBar: AppBar(),
       body:

@@ -1,7 +1,7 @@
 import 'package:fitness_workouts/blocs/workout_create/workout_create.dart';
 import 'package:fitness_workouts/models/activity.dart';
 import 'package:fitness_workouts/models/exercise.dart';
-import 'package:fitness_workouts/screens/workout_generate_screen.dart';
+import 'package:fitness_workouts/screens/workout/workout_generate_screen.dart';
 import 'package:fitness_workouts/util/dialogs.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';

@@ -1,12 +1,12 @@
 import 'package:fitness_workouts/blocs/workouts/workouts.dart';
-import 'package:fitness_workouts/screens/workout_create_screen.dart';
-import 'package:fitness_workouts/screens/workout_runner_setup_screen.dart';
+import 'package:fitness_workouts/screens/workout/workout_create_screen.dart';
+import 'package:fitness_workouts/screens/workout/workout_runner_setup_screen.dart';
 import 'package:fitness_workouts/widgets/workout_tile.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-class WorkoutListScreen extends StatelessWidget {
-  static const route = "workouts/list/";
+class WorkoutHomeScreen extends StatelessWidget {
+  static const route = "/workout/home";
 
   @override
   Widget build(BuildContext context) {
@@ -30,8 +30,12 @@ class WorkoutListScreen extends StatelessWidget {
                 child: GestureDetector(
                   onTap: () {
                     // provider.selectWorkout(provider.workouts[index]);
-                    Navigator.of(context).pushNamed(WorkoutCreateScreen.route,
-                        arguments: loadedState.workouts[index].id);
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (_) => WorkoutCreateScreen(
+                            workoutId: loadedState.workouts[index].id),
+                      ),
+                    );
                   },
                   child: WorkoutTile(
                     name: loadedState.workouts[index].name,
@@ -39,9 +43,12 @@ class WorkoutListScreen extends StatelessWidget {
                     duration: '10:00',
                     onPlay: () {
                       //provider.selectWorkout(provider.workouts[index]);
-                      Navigator.of(context).pushNamed(
-                          WorkoutRunnerSetupScreen.route,
-                          arguments: loadedState.workouts[index]);
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (_) => WorkoutRunnerSetupScreen(
+                              workout: loadedState.workouts[index]),
+                        ),
+                      );
                     },
                   ),
                 ),
@@ -51,9 +58,11 @@ class WorkoutListScreen extends StatelessWidget {
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          Navigator.of(context).pushNamed(WorkoutCreateScreen.route);
-        },
+        onPressed: () => Navigator.of(context).push(
+          MaterialPageRoute(
+            builder: (_) => WorkoutCreateScreen(),
+          ),
+        ),
         child: Icon(Icons.add),
       ),
     );

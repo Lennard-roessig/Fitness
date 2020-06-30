@@ -13,7 +13,7 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class WorkoutRunnerScreen extends StatelessWidget {
-  static const route = '/runner';
+  static const route = "/workout/runner";
 
   @override
   Widget build(BuildContext context) {

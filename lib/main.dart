@@ -2,13 +2,9 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fitness_workouts/blocs/timer/timer_bloc.dart';
 
 import 'package:fitness_workouts/repositories/workouts_repository/firestore_reactive_workout_repository.dart';
-import 'package:fitness_workouts/screens/activity_create_screen.dart';
 import 'package:fitness_workouts/screens/home_screen.dart';
-import 'package:fitness_workouts/screens/workout_create_screen.dart';
-import 'package:fitness_workouts/screens/workout_finish_screen.dart';
-import 'package:fitness_workouts/screens/workout_list_screen.dart';
-import 'package:fitness_workouts/screens/workout_runner_screen.dart';
-import 'package:fitness_workouts/screens/workout_runner_setup_screen.dart';
+import 'package:fitness_workouts/screens/workout/workout_home_screen.dart';
+import 'package:fitness_workouts/screens/workout/workout_runner_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -16,7 +12,6 @@ import 'blocs/exercises/exercises.dart';
 import 'blocs/sounds/sounds_bloc.dart';
 import 'blocs/workouts/workouts.dart';
 import 'repositories/exercise_repository/firestore_reactive_exercise_repository.dart';
-import 'screens/activity_list_screen.dart';
 import 'screens/timer_screen.dart';
 
 void main() {
@@ -60,18 +55,15 @@ class MyApp extends StatelessWidget {
       routes: {
         HomeScreen.route: (_) => HomeScreen(),
         TimerScreen.route: (_) => TimerScreen(),
-        ActivityListScreen.route: (_) => ActivityListScreen(),
-        WorkoutRunnerSetupScreen.route: (_) => WorkoutRunnerSetupScreen(),
-        WorkoutListScreen.route: (_) => WorkoutListScreen(),
-        WorkoutCreateScreen.route: (_) => WorkoutCreateScreen(),
-        WorkoutFinishScreen.route: (_) => WorkoutFinishScreen(),
+        WorkoutHomeScreen.route: (_) => WorkoutHomeScreen(),
         WorkoutRunnerScreen.route: (_) => MultiBlocProvider(
               providers: [
-                BlocProvider<TimerBloc>(create: (_) => TimerBloc()),
+                BlocProvider<TimerBloc>(
+                  create: (_) => TimerBloc(),
+                ),
               ],
               child: WorkoutRunnerScreen(),
             ),
-        ActivityCreateScreen.route: (_) => ActivityCreateScreen(),
       },
     );
   }
