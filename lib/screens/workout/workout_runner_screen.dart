@@ -101,7 +101,7 @@ class WorkoutProgressIndicator extends StatelessWidget {
             ),
             Center(
               child: Text(
-                'Round ${state.round + 1} / ${rounds}',
+                'Round ${state.round + 1} / $rounds',
               ),
             ),
           ],

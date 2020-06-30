@@ -1,7 +1,8 @@
 import 'package:fitness_workouts/blocs/workout_create/workout_create.dart';
-import 'package:fitness_workouts/widgets/styled_text_field.dart';
+import 'package:fitness_workouts/widgets/inputs/styled_text_field.dart';
 import 'package:flutter/material.dart';
 
+// ignore: must_be_immutable
 class WorkoutFinishScreen extends StatelessWidget {
   final SetInformation information;
 

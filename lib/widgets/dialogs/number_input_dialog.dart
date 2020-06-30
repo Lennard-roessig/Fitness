@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 
-import '../number_input.dart';
+import '../inputs/number_input.dart';
 import 'styled_alert_dialog.dart';
 
+// ignore: must_be_immutable
 class NumberInputDialog extends StatelessWidget {
   final String title;
   final String suffix;

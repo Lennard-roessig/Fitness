@@ -3,7 +3,7 @@ import 'package:fitness_workouts/blocs/workouts/workouts.dart';
 import 'package:fitness_workouts/screens/workout/workout_timeline_view.dart';
 import 'package:fitness_workouts/widgets/dialogs/confirmation_dialog.dart';
 import 'package:fitness_workouts/widgets/workout_action_speed_dial.dart';
-import 'package:fitness_workouts/widgets/workout_create_tabbar.dart';
+import 'package:fitness_workouts/widgets/workout/workout_create_tabbar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:provider/provider.dart';

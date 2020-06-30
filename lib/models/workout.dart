@@ -109,4 +109,7 @@ class Workout {
 
   UnmodifiableMapView<WorkoutLevel, List<Activity>> get sequenceMap =>
       UnmodifiableMapView(_sequences);
+
+  @override
+  int get hashCode => super.hashCode;
 }

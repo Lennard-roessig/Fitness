@@ -46,7 +46,6 @@ class ExerciseSearch extends SearchDelegate<Exercise> {
     );
   }
 
-  // TODO has to be equal to Suggestions
   @override
   Widget buildResults(BuildContext context) {
     return BlocBuilder<ExercisesBloc, ExercisesState>(

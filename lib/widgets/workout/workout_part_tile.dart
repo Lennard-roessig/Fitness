@@ -6,9 +6,9 @@ import 'package:fitness_workouts/widgets/dialogs/alarm_dialog.dart';
 
 import 'package:flutter/material.dart';
 
-import 'activity_search_delegate.dart';
-import 'dialogs/number_input_dialog.dart';
-import 'menu_icon_button.dart';
+import '../inputs/exercise/activity_search_delegate.dart';
+import '../dialogs/number_input_dialog.dart';
+import '../inputs/menu_icon_button.dart';
 import 'workout_part_tile_group.dart';
 import 'workout_part_tile_pause.dart';
 import 'workout_part_tile_activity.dart';

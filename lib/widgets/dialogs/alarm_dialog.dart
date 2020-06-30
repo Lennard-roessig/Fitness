@@ -1,8 +1,8 @@
 import 'package:fitness_workouts/models/alarm.dart';
 import 'package:fitness_workouts/widgets/dialogs/alarm_create_dialog.dart';
+import 'package:fitness_workouts/widgets/inputs/inverted_flat_button.dart';
 import 'package:flutter/material.dart';
 
-import '../inverted_flat_button.dart';
 import 'styled_alert_dialog.dart';
 
 class AlarmDialog extends StatefulWidget {

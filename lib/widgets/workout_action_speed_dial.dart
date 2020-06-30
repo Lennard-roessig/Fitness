@@ -7,7 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 
-import 'activity_search_delegate.dart';
+import 'inputs/exercise/activity_search_delegate.dart';
 
 class WorkoutActionSpeedDial extends StatelessWidget {
   const WorkoutActionSpeedDial({Key key}) : super(key: key);

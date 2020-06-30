@@ -1,4 +1,4 @@
-import 'package:fitness_workouts/widgets/inverted_flat_button.dart';
+import 'package:fitness_workouts/widgets/inputs/inverted_flat_button.dart';
 import 'package:flutter/material.dart';
 
 class StyledAlertDialog extends StatelessWidget {

@@ -1,13 +1,14 @@
 import 'package:fitness_workouts/models/alarm.dart';
 import 'package:fitness_workouts/models/sound.dart';
+import 'package:fitness_workouts/widgets/inputs/styled_text_field.dart';
+import 'package:fitness_workouts/widgets/inputs/switch_input.dart';
 import 'package:flutter/material.dart';
 
-import '../number_input.dart';
-import '../sound_field.dart';
-import '../styled_text_field.dart';
-import '../switch_input.dart';
+import '../inputs/number_input.dart';
+import '../inputs/sound_field.dart';
 import 'styled_alert_dialog.dart';
 
+// ignore: must_be_immutable
 class AlarmCreateDialog extends StatelessWidget {
   static const options = const ['sec', '%'];
   String name;
