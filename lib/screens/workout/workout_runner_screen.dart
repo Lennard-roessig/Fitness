@@ -6,8 +6,8 @@ import 'package:fitness_workouts/models/activity.dart';
 import 'package:fitness_workouts/models/sound.dart';
 import 'package:fitness_workouts/models/workout.dart';
 
-import 'package:fitness_workouts/util/arc.dart';
-import 'package:fitness_workouts/util/time_format.dart';
+import 'package:fitness_workouts/widgets/arc.dart';
+import 'package:fitness_workouts/widgets/time_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -154,15 +154,15 @@ class Clock extends StatelessWidget {
         t = Column(
           mainAxisSize: MainAxisSize.min,
           children: <Widget>[
-            Text(
-              formatSecondsIntoMin(runnerState.time),
+            TimeText(
+              seconds: runnerState.time,
               style: TextStyle(
                 fontSize: 32,
                 color: Theme.of(context).accentColor,
               ),
             ),
-            Text(
-              formatSecondsIntoMin(time),
+            TimeText(
+              seconds: time,
               style: TextStyle(
                 fontSize: 18,
                 color: Theme.of(context).primaryColorLight,

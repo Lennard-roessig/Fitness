@@ -1,8 +1,8 @@
 import 'package:fitness_workouts/models/activity.dart';
 import 'package:fitness_workouts/models/alarm.dart';
 import 'package:fitness_workouts/screens/workout/workout_timeline_view.dart';
-import 'package:fitness_workouts/util/time_format.dart';
 import 'package:fitness_workouts/widgets/dialogs/alarm_dialog.dart';
+import 'package:fitness_workouts/widgets/time_text.dart';
 
 import 'package:flutter/material.dart';
 
@@ -111,8 +111,8 @@ class WorkoutPartTile extends StatelessWidget {
     return SizedBox(
       width: 24,
       child: FittedBox(
-        child: Text(
-          formatSecondsIntoMin(time),
+        child: TimeText(
+          seconds: time,
           style: TextStyle(
             color: Theme.of(context).secondaryHeaderColor,
             fontSize: 12,
